@@ -16,7 +16,7 @@ export function createHeroSection(): HTMLElement {
 
 
       <div class="absolute bottom-12 left-12 group">
-        <div class="text-[40px] font-black text-white/5 font-poppins leading-none mb-[-10px] tracking-tighter uppercase">Forge</div>
+        <div class="text-[40px] font-black text-white/70 font-poppins leading-none mb-[-10px] tracking-tighter uppercase">Forge</div>
         <div class="text-[10px] text-white/70 font-mono tracking-[0.5em] uppercase border-t border-white/10 pt-2">
           LA FORGE
         </div>
@@ -33,26 +33,29 @@ export function createHeroSection(): HTMLElement {
       </div>
     </div>
 
-    <div class="absolute right-12 top-1/2 -translate-y-1/2 z-20 text-right flex flex-col items-end justify-center animate-forge-thud">
+    <div class="absolute right-12 top-1/2 -translate-y-1/2 z-20 text-right flex flex-col items-end justify-center">
       <div class="mb-4 overflow-hidden">
         <span class="text-xs text-white/80 font-bold tracking-[0.5em] uppercase block mb-2 opacity-70">NOUVELLE ALBUM</span>
         <div class="h-[2px] w-24 bg-white/40 ml-auto"></div>
       </div>
       
-      <h2 class="text-6xl md:text-9xl text-white font-poppins uppercase font-black mb-2 tracking-tighter leading-none mix-blend-difference" data-text="LA FORGE">
+      <h2 class="text-6xl md:text-9xl text-white font-poppins uppercase font-black mb-2 tracking-tighter leading-none mix-blend-difference">
         LA FORGE
       </h2>
       
-      <p class="text-white/40 text-xl font-poppins font-light tracking-[0.4em] mt-4 italic">17/01/2026 </p>
+      <p class="text-white/40 text-xl font-poppins font-light tracking-[0.4em] mt-4 italic">17/01/2026</p>
       
       <div class="mt-12 flex flex-col items-end gap-4 group cursor-pointer">
         <div class="relative px-8 py-3 border border-white/20 overflow-hidden transition-all group-hover:border-white group-hover:bg-white/5">
-            <a href="#" class="text-white text-sm font-bold uppercase tracking-[0.4em] relative z-10">Entrez dans la forge</a>
-            <div class="absolute top-0 left-0 w-1 h-1 bg-white"></div>
-            <div class="absolute bottom-0 right-0 w-1 h-1 bg-white"></div>
+          <a href="#" class="text-white text-sm font-bold uppercase tracking-[0.4em] relative z-10">Entrez dans la forge</a>
+          <div class="absolute top-0 left-0 w-1 h-1 bg-white"></div>
+          <div class="absolute bottom-0 right-0 w-1 h-1 bg-white"></div>
         </div>
       </div>
     </div>
+    <img src="/dither_cut1.png" alt="Masque" class="w-90 h-70 cursor-pointer absolute bottom-10 right-10  animate-float">
+
+    
 
     <div id="loader-progress" class="fixed bottom-0 left-0 h-1 bg-white z-50 transition-all duration-300" style="width: 0%"></div>
   `;

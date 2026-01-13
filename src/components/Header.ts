@@ -4,7 +4,7 @@ export function createHeader(): HTMLElement {
 
   header.innerHTML = `
     <nav class="flex justify-between items-center">
-      <h1 class="text-white text-xl leading-none font-poppins uppercase font-bold tracking-[0.2em]">Void</h1>
+      <h1 class="text-white/50 text-xl leading-none font-poppins uppercase font-bold tracking-[0.2em]">LA FORGE | ZIAK</h1>
       <div class="flex gap-8">
         <a href="#" class="text-white/60 text-[10px] uppercase font-poppins tracking-widest hover:text-white transition-colors">Accueill</a>
         <a href="#" class="text-white/60 text-[10px] uppercase font-poppins tracking-widest hover:text-white transition-colors">Tracklist</a>

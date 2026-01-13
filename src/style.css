@@ -32,7 +32,6 @@ canvas {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-/* Animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -51,32 +50,8 @@ canvas {
 .delay-1 { animation-delay: 0.2s; }
 .delay-2 { animation-delay: 0.4s; }
 
-.chrome-text {
-  background: linear-gradient(
-    to bottom,
-    #ffffff 0%,
-    #e2e2e2 20%,
-    #b1b1b1 35%,
-    #7a7a7a 50%,
-    #d1d1d1 51%,
-    #eeeeee 75%,
-    #ffffff 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
-  position: relative;
-}
 
-.chrome-text::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: -1;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
-}
+
 
 
 nav a {
@@ -98,3 +73,28 @@ nav a::after {
 nav a:hover::after {
   width: 100%;
 }
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+@keyframes ping-slow {
+  0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+  50% { opacity: 0.1; }
+  100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+.animate-ping-slow {
+  animation: ping-slow 4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+
+
+
+
+

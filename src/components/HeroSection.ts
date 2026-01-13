@@ -7,45 +7,53 @@ export function createHeroSection(): HTMLElement {
     "w-full h-full flex justify-center items-center relative overflow-hidden bg-black";
 
   section.innerHTML = `
-    <div class="noise"></div>
+    <div class="absolute inset-0 z-1 pointer-events-none opacity-10" 
+         style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0); background-size: 30px 30px;">
+    </div>
     <div id="three-container" class="fixed top-0 left-0 w-full h-full z-0"></div>
 
-    <div class="w-full h-full z-10 bg-linear-to-b from-black/60 via-transparent to-black/80 fixed top-0 left-0 pointer-events-none"></div>
+    <div class="w-full h-full z-10 bg-linear-to-b from-black/80 via-transparent to-black/90 fixed top-0 left-0 pointer-events-none"></div>
 
-    <!-- Éléments de design décoratifs -->
-    <div class="fixed inset-0 z-15 pointer-events-none">
-      <div class="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-white/20 to-transparent"></div>
-      <div class="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-white/20 to-transparent"></div>
-      <div class="absolute top-0 left-12 w-px h-full bg-linear-to-b from-transparent via-white/5 to-transparent"></div>
-      <div class="absolute top-0 right-12 w-px h-full bg-linear-to-b from-transparent via-white/5 to-transparent"></div>
-      
-      <div class="absolute bottom-8 left-8 text-[10px] text-white/30 font-poppins uppercase tracking-[0.2em]">
-        Status: Active // Sector: Void // 00.0000° N, 00.0000° E
+
+      <div class="absolute bottom-12 left-12 group">
+        <div class="text-[40px] font-black text-white/5 font-poppins leading-none mb-[-10px] tracking-tighter uppercase">Forge</div>
+        <div class="text-[10px] text-white/70 font-mono tracking-[0.5em] uppercase border-t border-white/10 pt-2">
+          LA FORGE
+        </div>
+      </div>
+
+      <div class="absolute right-12 bottom-12 flex flex-col items-end gap-2">
+        <div class="flex gap-1">
+          <div class="w-1 h-4 bg-white/40 animate-pulse"></div>
+          <div class="w-1 h-4 bg-white/30 animate-pulse delay-75"></div>
+          <div class="w-1 h-4 bg-white/20 animate-pulse delay-150"></div>
+          <div class="w-1 h-4 bg-white/10 animate-pulse delay-300"></div>
+        </div>
+        <div class="text-[9px] text-white/30 font-mono uppercase tracking-widest">Heat Level // Critical</div>
       </div>
     </div>
 
-    <div class="absolute right-12 top-1/2 -translate-y-1/2 z-20 text-right flex flex-col items-end justify-center animate-fade-in-up">
+    <div class="absolute right-12 top-1/2 -translate-y-1/2 z-20 text-right flex flex-col items-end justify-center animate-forge-thud">
       <div class="mb-4 overflow-hidden">
-        <span class="text-xs text-white/80 font-bold tracking-[0.5em] uppercase block mb-2 opacity-70">Monochrome Protocol</span>
-        <div class="h-px w-full bg-white/20"></div>
+        <span class="text-xs text-white/80 font-bold tracking-[0.5em] uppercase block mb-2 opacity-70">NOUVELLE ALBUM</span>
+        <div class="h-[2px] w-24 bg-white/40 ml-auto"></div>
       </div>
       
-      <h2 class="text-6xl md:text-8xl text-white font-poppins uppercase font-black mb-2 tracking-tighter leading-none" data-text="Ziak - La Forge">
-        La Forge
+      <h2 class="text-6xl md:text-9xl text-white font-poppins uppercase font-black mb-2 tracking-tighter leading-none mix-blend-difference" data-text="LA FORGE">
+        LA FORGE
       </h2>
       
-      <p class="text-white/40 text-xl font-poppins font-light tracking-[0.4em] mt-4">13.01.2026</p>
+      <p class="text-white/40 text-xl font-poppins font-light tracking-[0.4em] mt-4 italic">17/01/2026 </p>
       
-      <div class="mt-8 flex flex-col items-end gap-2 group cursor-pointer">
-        <div class="flex gap-4 items-center">
-            <div class="w-12 h-px bg-white/50 transition-all group-hover:w-20 group-hover:bg-white"></div>
-            <a href="#" class="text-white/70 text-sm font-bold uppercase tracking-[0.3em] group-hover:text-white transition-colors">Enter the Void</a>
+      <div class="mt-12 flex flex-col items-end gap-4 group cursor-pointer">
+        <div class="relative px-8 py-3 border border-white/20 overflow-hidden transition-all group-hover:border-white group-hover:bg-white/5">
+            <a href="#" class="text-white text-sm font-bold uppercase tracking-[0.4em] relative z-10">Entrez dans la forge</a>
+            <div class="absolute top-0 left-0 w-1 h-1 bg-white"></div>
+            <div class="absolute bottom-0 right-0 w-1 h-1 bg-white"></div>
         </div>
-        <span class="text-[9px] text-white/20 uppercase tracking-widest">System stabilized // No signal</span>
       </div>
     </div>
 
-    <!-- Loader progress -->
     <div id="loader-progress" class="fixed bottom-0 left-0 h-1 bg-white z-50 transition-all duration-300" style="width: 0%"></div>
   `;
 
@@ -149,30 +157,18 @@ export function createHeroSection(): HTMLElement {
 
   camera.position.z = 7;
 
-  const particlesGeometry = new THREE.BufferGeometry();
-  const particlesCount = 1500;
-  const posArray = new Float32Array(particlesCount * 3);
-
-  for (let i = 0; i < particlesCount * 3; i++) {
-    posArray[i] = (Math.random() - 0.5) * 20;
-  }
-
-  particlesGeometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(posArray, 3)
-  );
-  const particlesMaterial = new THREE.PointsMaterial({
-    size: 0.012,
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.3,
-    blending: THREE.AdditiveBlending,
+  const ringGeometry = new THREE.RingGeometry(3.5, 4, 32);
+  const ringMaterial = new THREE.MeshStandardMaterial({
+    color: 0x222222,
+    roughness: 0.8,
+    metalness: 1,
+    side: THREE.DoubleSide,
   });
+  const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
+  ringMesh.rotation.x = Math.PI / 2;
+  ringMesh.position.set(-4, -2, 0);
+  scene.add(ringMesh);
 
-  const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-  scene.add(particlesMesh);
-
-  // Animation Loop
   const clock = new THREE.Clock();
 
   function animate() {
@@ -180,27 +176,17 @@ export function createHeroSection(): HTMLElement {
     const elapsedTime = clock.getElapsedTime();
 
     if (model) {
-      // Fixed rotation looking towards the left
       model.rotation.y = -1.5;
       model.rotation.x = 0;
-
-      // Gentle floating animation
-      model.position.y = Math.sin(elapsedTime * 0.5) * 0.1;
-
-      // Simulate flickering light (flame effect)
-      whiteSpotlight.intensity = 6 + Math.sin(elapsedTime * 10) * 2;
+      model.position.y = Math.sin(elapsedTime * 0.3) * 0.05;
+      whiteSpotlight.intensity = 10 + Math.sin(elapsedTime * 15) * 5;
     }
-
-    // Particles animation
-    particlesMesh.rotation.y = elapsedTime * 0.05;
-    particlesMesh.rotation.x = elapsedTime * 0.02;
 
     renderer.render(scene, camera);
   }
 
   animate();
 
-  // Resize handling
   window.addEventListener("resize", updateSize);
 
   const resizeObserver = new ResizeObserver(() => {

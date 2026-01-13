@@ -1,6 +1,5 @@
 // Section Track : création DOM à la main comme les autres components
-import { createScrollFloatText } from '../style/scrollFloat';
-export function createTrackSection(title: string, producer: string, studio: string, align: 'left' | 'right' = 'left'): HTMLElement {
+export function createTrackSection(title: string, producer: string, studio: string): HTMLElement {
   const section = document.createElement('section');
   
   /*section.className =

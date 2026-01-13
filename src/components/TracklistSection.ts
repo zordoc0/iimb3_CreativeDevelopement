@@ -18,9 +18,8 @@ export function createTracklistSection(): HTMLElement {
     { title: '5.OUTRO', producer: 'Kant', studio: 'Studio Empire' },
   ];
 
-  tracks.forEach((track, i) => {
-    const align = i % 2 === 0 ? 'left' : 'right';
-    const trackElem = createTrackSection(track.title, track.producer, track.studio, align);
+  tracks.forEach((track) => {
+    const trackElem = createTrackSection(track.title, track.producer, track.studio);
     section.appendChild(trackElem);
   });
 

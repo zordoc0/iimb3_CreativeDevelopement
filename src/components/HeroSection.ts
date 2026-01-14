@@ -4,18 +4,18 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 export function createHeroSection(): HTMLElement {
   const section = document.createElement("section");
   section.className =
-    "w-full h-full flex justify-center items-center relative overflow-hidden bg-black";
+    "w-full min-h-screen flex justify-center items-center relative overflow-hidden bg-black";
 
   section.innerHTML = `
     <div class="absolute inset-0 z-1 pointer-events-none opacity-10" 
          style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0); background-size: 30px 30px;">
     </div>
-    <div id="three-container" class="fixed top-0 left-0 w-full h-full z-0"></div>
+    <div id="three-container" class="absolute inset-0 w-full h-full z-0"></div>
 
-    <div class="w-full h-full z-10 bg-linear-to-b from-black/80 via-transparent to-black/90 fixed top-0 left-0 pointer-events-none"></div>
+    <div class="w-full h-full z-10 bg-linear-to-b from-black/80 via-transparent to-black/90 absolute inset-0 pointer-events-none"></div>
 
 
-      <div class="absolute bottom-12 left-12 group">
+      <div class="absolute bottom-12 left-12 group z-20">
         <div class="text-[40px] font-black text-white/70 font-poppins leading-none mb-[-10px] tracking-tighter uppercase">Forge</div>
         <div class="text-[10px] text-white/70 font-mono tracking-[0.5em] uppercase border-t border-white/10 pt-2">
           LA FORGE
@@ -57,7 +57,7 @@ export function createHeroSection(): HTMLElement {
 
     
 
-    <div id="loader-progress" class="fixed bottom-0 left-0 h-1 bg-white z-50 transition-all duration-300" style="width: 0%"></div>
+    <div id="loader-progress" class="absolute bottom-0 left-0 h-1 bg-white z-50 transition-all duration-300" style="width: 0%"></div>
   `;
 
   const container = section.querySelector("#three-container") as HTMLElement;

@@ -1,36 +1,75 @@
-// Section Track : création DOM à la main comme les autres components
-export function createTrackSection(title: string, producer: string, studio: string, align: 'left' | 'right' = 'left', trackNumber: number): HTMLElement {
-  const section = document.createElement('section');
-  
-  /*section.className =
-    'track-section w-full max-w-5xl my-8 p-8 rounded-xl text-white flex flex-col ' +
-    (align === 'right' ? 'ml-auto items-end' : 'mr-auto items-start');
-    section.innerHTML = `
-    <h3 class="text-5xl font-mono font-bold mb-2 font-poppins">${title}</h3>
-    <p class="text-lg mb-1 font-poppins">Prod. ${producer}</p>
-    <p class="text-md font-poppins italic">Studio: ${studio}</p>
-    `;*/
-  const alignClass =
-    align === 'right'
-      ? 'items-end ml-auto text-right'
-      : 'items-start mr-auto text-left';
+export function createTrackSection(
+  title: string,
+  producer: string,
+  trackNumber: number,
+  videoUrl: string = "/bg-video.mp4"
+): HTMLElement {
+  const section = document.createElement("section");
 
-    const divClass = 
-        align === 'right'
-            ? 'flex flex-row-reverse'
-            : 'flex flex-row';
+  section.className = `
+    w-full border-t border-white/10 
+    hover:border-white/40 
+    transition-all duration-300
+    group cursor-pointer
+    relative overflow-hidden
+  `;
 
-  section.className =
-    `w-full text-white flex flex-col justify-center ${alignClass} bg-black/90 relative`;
   section.innerHTML = `
-    <div class="${divClass} justify-between w-full mt-10 mb-2">
-        <h3 class="text-[8rem] w-6xl ${align === 'right' ? 'text-right' : 'text-left'} font-extrabold font-poppins tracking-tighter leading-[0.8] mr-2">${title}</h3>
-        <p class="text-[4rem] font-extrabold ${align === 'right' ? 'text-right' : 'text-left'} font-poppins ml-5 mr-5 tracking-tighter leading-none">${trackNumber}</p>
+    <video 
+      class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none"
+      muted
+      loop
+      playsinline
+    >
+      <source src="${videoUrl}" type="video/mp4">
+    </video>
+
+    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+
+    <div class="py-12 flex items-center justify-between gap-8 relative z-10">
+      
+      <div class="text-6xl md:text-8xl font-anton text-white/20 group-hover:text-white transition-all duration-500 min-w-[120px] md:min-w-[180px]">
+        ${trackNumber.toString().padStart(2, "0")}
+      </div>
+      
+      <div class="flex-1">
+        <h3 class="text-4xl md:text-6xl lg:text-7xl font-anton uppercase text-white leading-none tracking-tighter group-hover:tracking-normal transition-all duration-500">
+          ${title}
+        </h3>
+      </div>
+      
+      <div class="hidden md:flex flex-col items-end gap-2 min-w-[200px]">
+        <p class="text-sm text-white/40 uppercase tracking-[0.3em] font-poppins group-hover:text-white/60 transition-colors">
+          ${producer}
+        </p>
+        <div class="w-16 h-px bg-white/20 group-hover:w-24 group-hover:bg-white/60 transition-all duration-500"></div>
+      </div>
+      
+      <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
     </div>
-    <p class="text-lg mb-1 mr-2 font-poppins">Prod. ${producer}</p>
-    <p class="text-md font-poppins mr-2 italic">${studio}</p>
-    <hr class="w-full border-t border-white mt-8" />
-    `;
+  `;
+
+
+  const video = section.querySelector("video") as HTMLVideoElement;
+
+  section.addEventListener("mouseenter", () => {
+    if (video) {
+      video.currentTime = 0; 
+      video.play().catch(() => {
+      });
+    }
+  });
+
+  section.addEventListener("mouseleave", () => {
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+  });
 
   return section;
 }

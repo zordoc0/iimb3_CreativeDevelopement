@@ -39,7 +39,7 @@ export function createHeroSection(): HTMLElement {
         <div class="h-[2px] w-24 bg-white/40 ml-auto"></div>
       </div>
       
-      <h2 class="chrome-text text-6xl md:text-9xl font-poppins uppercase  font-black mb-2 tracking-tighter leading-none">
+      <h2 class="text-white/90 text-6xl md:text-9xl font-poppins uppercase bold font-black mb-2 tracking-tighter leading-none">
         LA FORGE
       </h2>
       

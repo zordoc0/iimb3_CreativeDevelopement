@@ -29,7 +29,7 @@ export function createHeroSection(): HTMLElement {
           <div class="w-1 h-4 bg-white/20 animate-pulse delay-150"></div>
           <div class="w-1 h-4 bg-white/10 animate-pulse delay-300"></div>
         </div>
-        <div class="text-[9px] text-white/90 font-mono uppercase tracking-widest"></div>
+        <div class="text-[9px] text-white font-mono uppercase tracking-widest">17/01/2026</div>
       </div>
     </div>
 
@@ -44,7 +44,6 @@ export function createHeroSection(): HTMLElement {
       </h2>
       
       <p class="text-white/40 text-xl font-poppins font-light tracking-[0.4em] mt-4 italic">17/01/2026</p>
-      
       <div class="mt-12 flex flex-col items-end gap-4 group cursor-pointer">
         <div class="relative px-8 py-3 border border-white/20 overflow-hidden transition-all group-hover:border-white group-hover:bg-white/5">
           <a href="#" class="text-white text-sm font-bold uppercase tracking-[0.4em] relative z-10">Entrez dans la forge</a>
@@ -106,8 +105,8 @@ export function createHeroSection(): HTMLElement {
   whiteSpotlight.penumbra = 0.5;
   scene.add(whiteSpotlight);
 
-  const backLight = new THREE.PointLight(0xff0000, 8);
-  backLight.position.set(0, -2, 2);
+  const backLight = new THREE.PointLight(0xff0000, 100);
+  backLight.position.set(5, -2, 2);
   scene.add(backLight);
 
   const rimLight = new THREE.PointLight(0xffffff, 3);

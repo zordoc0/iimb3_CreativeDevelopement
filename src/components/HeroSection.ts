@@ -29,7 +29,7 @@ export function createHeroSection(): HTMLElement {
           <div class="w-1 h-4 bg-white/20 animate-pulse delay-150"></div>
           <div class="w-1 h-4 bg-white/10 animate-pulse delay-300"></div>
         </div>
-        <div class="text-[9px] text-white/30 font-mono uppercase tracking-widest">Heat Level // Critical</div>
+        <div class="text-[9px] text-white/90 font-mono uppercase tracking-widest"></div>
       </div>
     </div>
 
@@ -39,7 +39,7 @@ export function createHeroSection(): HTMLElement {
         <div class="h-[2px] w-24 bg-white/40 ml-auto"></div>
       </div>
       
-      <h2 class="text-6xl md:text-9xl text-white font-poppins uppercase font-black mb-2 tracking-tighter leading-none mix-blend-difference">
+      <h2 class="chrome-text text-6xl md:text-9xl font-poppins uppercase  font-black mb-2 tracking-tighter leading-none">
         LA FORGE
       </h2>
       
@@ -106,8 +106,8 @@ export function createHeroSection(): HTMLElement {
   whiteSpotlight.penumbra = 0.5;
   scene.add(whiteSpotlight);
 
-  const backLight = new THREE.PointLight(0xffffff, 2);
-  backLight.position.set(5, -2, 2);
+  const backLight = new THREE.PointLight(0xff0000, 8);
+  backLight.position.set(0, -2, 2);
   scene.add(backLight);
 
   const rimLight = new THREE.PointLight(0xffffff, 3);

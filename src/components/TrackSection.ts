@@ -16,7 +16,7 @@ export function createTrackSection(
 
   section.innerHTML = `
     <video 
-      class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none"
+      class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none"
       muted
       loop
       playsinline
@@ -26,7 +26,7 @@ export function createTrackSection(
 
     <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
-    <div class="py-12 flex items-center justify-between gap-8 relative z-10">
+    <div class="py-10 flex items-center justify-between relative z-10">
       
       <div class="text-6xl md:text-8xl font-anton text-white/20 group-hover:text-white transition-all duration-500 min-w-[120px] md:min-w-[180px]">
         ${trackNumber.toString().padStart(2, "0")}

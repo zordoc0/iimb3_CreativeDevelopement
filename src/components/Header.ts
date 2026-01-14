@@ -16,14 +16,16 @@ export function createHeader(): HTMLElement {
       </div>
 
       <div class="flex justify-end gap-4 md:gap-8">
-        <a href="#" class="text-white/40 text-[9px] uppercase font-poppins tracking-widest hover:text-white transition-colors">Tracklist</a>
-        <a href="#" class="text-white/40 text-[9px] uppercase font-poppins tracking-widest hover:text-white transition-colors">Cover</a>
+        <a href="#tracklist" class="text-white/40 text-[9px] uppercase font-poppins tracking-widest hover:text-white transition-colors">Tracklist</a>
+        <a href="#cover" class="text-white/40 text-[9px] uppercase font-poppins tracking-widest hover:text-white transition-colors">Cover</a>
       </div>
     </nav>
   `;
 
-  const container = header.querySelector("#header-mask-container") as HTMLElement;
-  
+  const container = header.querySelector(
+    "#header-mask-container"
+  ) as HTMLElement;
+
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = 2.5;
@@ -47,18 +49,18 @@ export function createHeader(): HTMLElement {
     "/ziak_mask.glb",
     (gltf) => {
       maskModel = gltf.scene;
-      
+
       const box = new THREE.Box3().setFromObject(maskModel);
       const center = box.getCenter(new THREE.Vector3());
       maskModel.position.sub(center);
-      
+
       const size = box.getSize(new THREE.Vector3());
       const maxDim = Math.max(size.x, size.y, size.z);
       const scale = 1.2 / maxDim;
       maskModel.scale.set(scale, scale, scale);
-      
+
       scene.add(maskModel);
-      
+
       maskModel.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
           const mesh = child as THREE.Mesh;

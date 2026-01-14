@@ -2,6 +2,7 @@ import { createTrackSection } from "./TrackSection";
 
 export function createTracklistSection(): HTMLElement {
   const section = document.createElement("section");
+  section.id = "tracklist";
   section.className = "w-full min-h-screen bg-black py-32 px-8";
 
   const header = document.createElement("div");
@@ -17,9 +18,8 @@ export function createTracklistSection(): HTMLElement {
       />
     </div>
 
-    <!-- Titre avec l'image en overlay -->
     <div class="relative z-10">
-      <h2 class="text-[15vw] md:text-[12rem] font-anton uppercase text-white leading-none tracking-tighter">
+      <h2 class="bold text-[15vw] md:text-[12rem] font-anton uppercase text-white leading-none tracking-tighter">
         TRACKS
       </h2>
     </div>
@@ -30,30 +30,29 @@ export function createTracklistSection(): HTMLElement {
   tracksContainer.className = "w-full max-w-[1400px] mx-auto space-y-0";
 
   const tracks = [
-    { title: "L'ENNEMI", 
-      producer: "RosalieDu38", 
-      videoUrl: "/bg-video.mp4" },
+    { title: "L'ENNEMI", producer: "RosalieDu38", videoUrl: "/1.mp4" },
 
-    { title: "LA FORGE", 
-      producer: "Seezy", 
-      videoUrl: "/bg-video.mp4" },
+    { title: "LA FORGE", producer: "Seezy", videoUrl: "/2.mp4" },
     {
       title: "LA REUSSITE OU L'OUBLI",
       producer: "Flem",
-      videoUrl: "/bg-video.mp4",
+      videoUrl: "/3.mp4",
     },
     {
       title: "UN VRAI COUTEAU",
       producer: "Hologram Lo",
-      videoUrl: "/bg-video.mp4",
+      videoUrl: "/4.mp4",
     },
-    { title: "OUTRO", 
-      producer: "Flem", 
-      videoUrl: "/bg-video.mp4" },
+    { title: "OUTRO", producer: "Flem", videoUrl: "/5.mp4" },
   ];
 
   tracks.forEach((track, i) => {
-    const trackElem = createTrackSection(track.title, track.producer, i + 1);
+    const trackElem = createTrackSection(
+      track.title,
+      track.producer,
+      i + 1,
+      track.videoUrl
+    );
     tracksContainer.appendChild(trackElem);
   });
 

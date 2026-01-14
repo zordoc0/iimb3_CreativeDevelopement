@@ -2,7 +2,7 @@ export function createTrackSection(
   title: string,
   producer: string,
   trackNumber: number,
-  videoUrl: string = "/bg-video.mp4"
+  videoUrl: string,
 ): HTMLElement {
   const section = document.createElement("section");
 

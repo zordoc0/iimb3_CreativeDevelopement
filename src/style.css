@@ -25,6 +25,10 @@ canvas {
   display: block;
 }
 
+.font-anton {
+  font-family: 'Anton', sans-serif;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

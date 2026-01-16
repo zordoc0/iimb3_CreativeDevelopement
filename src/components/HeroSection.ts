@@ -116,6 +116,13 @@ export function createHeroSection(): HTMLElement {
   const loader = new GLTFLoader();
   let model: THREE.Group;
 
+  const targetRotation = { x: 0, y: 0 };
+
+  window.addEventListener("mousemove", (event) => {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  });
+
   loader.load(
     "/zzz.glb",
     (gltf) => {
@@ -177,9 +184,15 @@ export function createHeroSection(): HTMLElement {
     requestAnimationFrame(animate);
     const elapsedTime = clock.getElapsedTime();
 
+
+    //souris
     if (model) {
-      model.rotation.y = -1.5;
-      model.rotation.x = 0;
+      targetRotation.y = -1.5 + mouse.x * 0.15; 
+      targetRotation.x = -mouse.y * 0.1; 
+
+      model.rotation.y += (targetRotation.y - model.rotation.y) * 0.05;
+      model.rotation.x += (targetRotation.x - model.rotation.x) * 0.05;
+
       model.position.y = Math.sin(elapsedTime * 0.3) * 0.05;
       whiteSpotlight.intensity = 10 + Math.sin(elapsedTime * 15) * 5;
     }

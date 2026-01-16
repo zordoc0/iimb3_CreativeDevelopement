@@ -1,6 +1,101 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
+type Preset = {
+  name: string;
+  bgType: string;
+  bgColor1: string;
+  bgColor2: string;
+  gradientAngle: number;
+  textColor: string;
+  textOpacity: number;
+  rotation: number;
+  positionX: number;
+  positionY: number;
+  scale: number;
+  metalness: number;
+  roughness: number;
+  mask: string;
+};
+
+const PRESETS: Record<string, Preset> = {
+  akimbo: {
+    name: "AKIMBO",
+    bgType: "flux",
+    bgColor1: "#000000",
+    bgColor2: "#ffffff",
+    gradientAngle: 0,
+    textColor: "#ffffff",
+    textOpacity: 1,
+    rotation: 90,
+    positionX: 0,
+    positionY: 0,
+    scale: 1.25,
+    metalness: 1,
+    roughness: 0,
+    mask: "/ziak_mask.glb",
+  },
+  neant: {
+    name: "NÉANT",
+    bgType: "abstract",
+    bgColor1: "#000000",
+    bgColor2: "#050505",
+    gradientAngle: 315,
+    textColor: "#444444",
+    textOpacity: 1,
+    rotation: 180,
+    positionX: 0.4,
+    positionY: -0.3,
+    scale: 1.35,
+    metalness: 0.8,
+    roughness: 0.4,
+    mask: "/zzz.glb",
+  },
+  chrome: {
+    name: "CHROME",
+    bgType: "brushed",
+    bgColor1: "#000000",
+    bgColor2: "#ffffff",
+    gradientAngle: 180,
+    textColor: "#ffffff",
+    textOpacity: 0.8,
+    rotation: 45,
+    positionX: 0.2,
+    positionY: -0.1,
+    scale: 1.5,
+    metalness: 1,
+    roughness: 0.05,
+    mask: "/ziak_mask.glb",
+  },
+  vague: {
+    name: "VAGUE",
+    bgType: "wave",
+    bgColor1: "#000000",
+    bgColor2: "#ffffff",
+    gradientAngle: 0,
+    textColor: "#ffffff",
+    textOpacity: 0.9,
+    rotation: 45,
+    positionX: 0.2,
+    positionY: -0.1,
+    scale: 1.4,
+    metalness: 1,
+    roughness: 0,
+    mask: "/ziak_mask.glb",
+  },
+};
+
+const COLOR_PALETTES = [
+  { bg1: "#1a0000", bg2: "#4a0000", text: "#ff4444" },
+  { bg1: "#0a0a1a", bg2: "#1a1a3a", text: "#6699cc" },
+  { bg1: "#2a2a00", bg2: "#4a4a00", text: "#ffdd00" },
+  { bg1: "#000000", bg2: "#1a1a1a", text: "#cccccc" },
+  { bg1: "#0a1a0a", bg2: "#1a3a1a", text: "#66cc66" },
+  { bg1: "#1a0a1a", bg2: "#3a1a3a", text: "#cc66cc" },
+  { bg1: "#0a1a2a", bg2: "#1a2a3a", text: "#aaddff" },
+  { bg1: "#2a1a0a", bg2: "#4a3a1a", text: "#ffaa66" },
+];
+
 export function createCoverSection(): HTMLElement {
   const section = document.createElement("section");
   section.id = "cover";
@@ -18,7 +113,7 @@ export function createCoverSection(): HTMLElement {
           />
         </div>
         <div class="relative z-10">
-          <div class="text-white/40 text-xs uppercase tracking-[0.5em] mb-4 font-poppins">Album Cover Generator</div>
+          <div class="text-white/40 text-xs uppercase tracking-[0.5em] mb-4 font-poppins">Générateur de Cover</div>
           <h2 class="text-white text-6xl md:text-8xl font-bold uppercase tracking-tighter font-anton">LA FORGE</h2>
         </div>
       </div>
@@ -28,6 +123,10 @@ export function createCoverSection(): HTMLElement {
         <div class="lg:col-span-3">
           <div class="relative aspect-square bg-black border border-white/10 overflow-hidden group">
             <div id="cover-canvas-container" class="w-full h-full"></div>
+            
+            <div class="absolute bottom-4 left-4 z-20 w-8 h-8 opacity-40 mix-blend-screen grayscale">
+              <img src="/masque1.png" alt="Logo" class="w-full h-full object-contain">
+            </div>
             
             <div class="absolute top-4 left-4 right-4 flex justify-between items-start opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
               <div class="text-white/60 text-[10px] font-mono uppercase tracking-wider">3000x3000px</div>
@@ -49,85 +148,53 @@ export function createCoverSection(): HTMLElement {
             </div>
           </div>
 
-          <div class="mt-4 flex gap-3 justify-center flex-wrap">
-            <button id="download-cover" class="px-6 py-2.5 bg-white text-black font-bold uppercase text-[10px] tracking-[0.3em] hover:bg-white/90 transition-all">
-              Télécharger
+          <div class="mt-6 space-y-4">
+            <button id="randomize" class="w-full px-8 py-4 bg-white text-black font-bold uppercase text-sm tracking-[0.3em] hover:bg-white/90 transition-all hover:scale-[1.02] active:scale-95">
+              Générer Aléatoirement
             </button>
-            <button id="toggle-grid" class="px-5 py-2.5 border border-white/20 text-white/70 font-bold uppercase text-[10px] tracking-[0.3em] hover:border-white hover:text-white transition-all">
-              Grille
-            </button>
-            <button id="randomize" class="px-5 py-2.5 border border-white/20 text-white/70 font-bold uppercase text-[10px] tracking-[0.3em] hover:border-white hover:text-white transition-all">
-              Aléatoire
-            </button>
+            
+            <div class="flex gap-3">
+              <button id="download-cover" class="flex-1 px-6 py-3 border border-white/40 text-white font-bold uppercase text-[10px] tracking-[0.3em] hover:bg-white/10 transition-all">
+                Télécharger
+              </button>
+              <button id="toggle-grid" class="px-6 py-3 border border-white/20 text-white/70 font-bold uppercase text-[10px] tracking-[0.3em] hover:border-white hover:text-white transition-all">
+                Grille
+              </button>
+            </div>
           </div>
         </div>
 
-        <div class="lg:col-span-2">
+        <div class="lg:col-span-2 space-y-4">
           
-          <div class="border border-white/10 bg-white/2 mb-4">
+          <div class="border border-white/10 bg-white/2 p-6">
+            <label class="text-white/80 text-xs uppercase tracking-wider font-bold mb-3 block">Presets Émotionnels</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button data-preset="akimbo" class="preset-btn px-4 py-3 border border-white/20 text-white/60 text-[10px] uppercase tracking-wider font-bold hover:border-white/40 hover:text-white transition-all">
+                Akimbo
+              </button>
+              <button data-preset="neant" class="preset-btn px-4 py-3 border border-white/20 text-white/60 text-[10px] uppercase tracking-wider font-bold hover:border-white/40 hover:text-white transition-all">
+                Néant
+              </button>
+              <button data-preset="chrome" class="preset-btn px-4 py-3 border border-white/20 text-white/60 text-[10px] uppercase tracking-wider font-bold hover:border-white/40 hover:text-white transition-all">
+                Chrome
+              </button>
+              <button data-preset="vague" class="preset-btn px-4 py-3 border border-white/20 text-white/60 text-[10px] uppercase tracking-wider font-bold hover:border-white/40 hover:text-white transition-all">
+                Vague
+              </button>
+            </div>
+          </div>
+
+          <div class="border border-white/10 bg-white/2">
             <div class="flex border-b border-white/10">
-              <button id="tab-background" class="flex-1 px-4 py-3 text-[10px] uppercase tracking-wider font-bold text-white bg-white/10 border-b-2 border-white transition-all">
-                Fond
+              <button id="tab-quick" class="flex-1 px-4 py-3 text-[10px] uppercase tracking-wider font-bold text-white bg-white/10 border-b-2 border-white transition-all">
+                Rapide
               </button>
-              <button id="tab-mask" class="flex-1 px-4 py-3 text-[10px] uppercase tracking-wider font-bold text-white/40 hover:text-white/60 transition-all">
-                Masque
-              </button>
-              <button id="tab-material" class="flex-1 px-4 py-3 text-[10px] uppercase tracking-wider font-bold text-white/40 hover:text-white/60 transition-all">
-                Matériau
+              <button id="tab-advanced" class="flex-1 px-4 py-3 text-[10px] uppercase tracking-wider font-bold text-white/40 hover:text-white/60 transition-all">
+                Avancé
               </button>
             </div>
 
-            <div id="tab-content-background" class="p-6 space-y-4">
-              <div>
-                <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Type</label>
-                <select id="background-type" class="w-full bg-black border border-white/20 text-white p-2 text-[10px] uppercase tracking-wider">
-                  <option value="solid">Couleur Unie</option>
-                  <option value="gradient">Dégradé</option>
-                  <option value="noise">Bruit</option>
-                  <option value="grid">Grille</option>
-                </select>
-              </div>
-
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Couleur 1</label>
-                  <div class="flex gap-2">
-                    <input type="color" id="bg-color1" value="#000000" class="w-10 h-10 bg-transparent border border-white/20 cursor-pointer">
-                    <input type="text" id="bg-color1-hex" value="#000000" class="flex-1 bg-black border border-white/20 text-white p-2 text-[10px] font-mono">
-                  </div>
-                </div>
-
-                <div id="color2-container" style="display: none;">
-                  <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Couleur 2</label>
-                  <div class="flex gap-2">
-                    <input type="color" id="bg-color2" value="#1a1a1a" class="w-10 h-10 bg-transparent border border-white/20 cursor-pointer">
-                    <input type="text" id="bg-color2-hex" value="#1a1a1a" class="flex-1 bg-black border border-white/20 text-white p-2 text-[10px] font-mono">
-                  </div>
-                </div>
-              </div>
-
-              <div id="gradient-angle-container" style="display: none;">
-                <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Angle <span class="text-white/40 font-mono" id="gradient-angle-value">0°</span></label>
-                <input type="range" id="gradient-angle" min="0" max="360" value="0" 
-                       class="w-full h-1 bg-white/10 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer">
-              </div>
-
-              <div>
-                <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Couleur Texte</label>
-                <div class="flex gap-2">
-                  <input type="color" id="text-color" value="#ffffff" class="w-10 h-10 bg-transparent border border-white/20 cursor-pointer">
-                  <input type="text" id="text-color-hex" value="#ffffff" class="flex-1 bg-black border border-white/20 text-white p-2 text-[10px] font-mono">
-                </div>
-              </div>
-
-              <div>
-                <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Opacité Texte <span class="text-white/40 font-mono" id="text-opacity-value">0.95</span></label>
-                <input type="range" id="text-opacity" min="0" max="1" step="0.05" value="0.95" 
-                       class="w-full h-1 bg-white/10 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer">
-              </div>
-            </div>
-
-            <div id="tab-content-mask" class="p-6 space-y-4" style="display: none;">
+            <div id="tab-content-quick" class="p-6 space-y-4">
               <div>
                 <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Modèle</label>
                 <div class="grid grid-cols-2 gap-2">
@@ -142,42 +209,73 @@ export function createCoverSection(): HTMLElement {
 
               <div>
                 <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Rotation <span class="text-white/40 font-mono" id="rotation-value">0°</span></label>
-                <input type="range" id="rotation-control" min="0" max="360" value="0" 
+                <input type="range" id="rotation-control" min="0" max="360" value="0" step="45"
                        class="w-full h-1 bg-white/10 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer">
+              </div>
+
+              <div>
+                <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Échelle <span class="text-white/40 font-mono" id="scale-value">1.2</span></label>
+                <input type="range" id="scale-control" min="0.8" max="1.5" step="0.1" value="1.2" 
+                       class="w-full h-1 bg-white/10 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer">
+              </div>
+            </div>
+
+            <div id="tab-content-advanced" class="p-6 space-y-4" style="display: none;">
+              <div>
+                <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Type de Fond</label>
+                <select id="background-type" class="w-full bg-black border border-white/20 text-white p-2 text-[10px] uppercase tracking-wider">
+                  <option value="aura">Aura Prestige</option>
+                  <option value="concrete">Béton Brut</option>
+                  <option value="carbon">Trame Carbone</option>
+                  <option value="flux">Flux Organique</option>
+                  <option value="wave">Vagues Chrome</option>
+                  <option value="brushed">Acier Brossé</option>
+                </select> 
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Couleur 1</label>
+                  <input type="color" id="bg-color1" value="#000000" class="w-full h-10 bg-transparent border border-white/20 cursor-pointer">
+                </div>
+
+                <div id="color2-container" style="display: none;">
+                  <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Couleur 2</label>
+                  <input type="color" id="bg-color2" value="#1a1a1a" class="w-full h-10 bg-transparent border border-white/20 cursor-pointer">
+                </div>
+              </div>
+
+              <div>
+                <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Couleur Texte</label>
+                <input type="color" id="text-color" value="#ffffff" class="w-full h-10 bg-transparent border border-white/20 cursor-pointer">
               </div>
 
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Position X <span class="text-white/40 font-mono" id="position-x-value">0.5</span></label>
-                  <input type="range" id="position-x-control" min="-1.5" max="1.5" step="0.1" value="0.5" 
+                  <input type="range" id="position-x-control" min="-0.5" max="0.5" step="0.1" value="0" 
                          class="w-full h-1 bg-white/10 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer">
                 </div>
 
                 <div>
                   <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Position Y <span class="text-white/40 font-mono" id="position-y-value">0.0</span></label>
-                  <input type="range" id="position-y-control" min="-1.5" max="1.5" step="0.1" value="0" 
+                  <input type="range" id="position-y-control" min="-0.5" max="0.5" step="0.1" value="0" 
                          class="w-full h-1 bg-white/10 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer">
                 </div>
               </div>
 
-              <div>
-                <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Échelle <span class="text-white/40 font-mono" id="scale-value">1.2</span></label>
-                <input type="range" id="scale-control" min="0.5" max="1.8" step="0.1" value="1.2" 
-                       class="w-full h-1 bg-white/10 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer">
-              </div>
-            </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Chrome <span class="text-white/40 font-mono" id="metalness-value">1.00</span></label>
+                  <input type="range" id="metalness-control" min="0" max="1" step="0.05" value="1" 
+                         class="w-full h-1 bg-white/10 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer">
+                </div>
 
-            <div id="tab-content-material" class="p-6 space-y-4" style="display: none;">
-              <div>
-                <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Intensité Chrome <span class="text-white/40 font-mono" id="metalness-value">1.00</span></label>
-                <input type="range" id="metalness-control" min="0" max="1" step="0.05" value="1" 
-                       class="w-full h-1 bg-white/10 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer">
-              </div>
-
-              <div>
-                <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Rugosité <span class="text-white/40 font-mono" id="roughness-value">0.20</span></label>
-                <input type="range" id="roughness-control" min="0" max="1" step="0.05" value="0.2" 
-                       class="w-full h-1 bg-white/10 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer">
+                <div>
+                  <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Rugosité <span class="text-white/40 font-mono" id="roughness-value">0.20</span></label>
+                  <input type="range" id="roughness-control" min="0" max="1" step="0.05" value="0.2" 
+                         class="w-full h-1 bg-white/10 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer">
+                </div>
               </div>
             </div>
 
@@ -259,64 +357,163 @@ export function createCoverSection(): HTMLElement {
     angle: number
   ) {
     bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+    const w = bgCanvas.width;
+    const h = bgCanvas.height;
+    const cx = w / 2;
+    const cy = h / 2;
+
+    const applyDither = (opacity: number = 0.2, density: number = 1) => {
+      const ditherSize = 4;
+      const ditherCanvas = document.createElement("canvas");
+      ditherCanvas.width = ditherSize;
+      ditherCanvas.height = ditherSize;
+      const ditherCtx = ditherCanvas.getContext("2d")!;
+
+      ditherCtx.fillStyle = `rgba(0,0,0,${opacity})`;
+      if (density > 0.5) ditherCtx.fillRect(0, 0, 1, 1);
+      if (density > 0.8) ditherCtx.fillRect(2, 2, 1, 1);
+      ditherCtx.fillStyle = `rgba(255,255,255,${opacity * 0.5})`;
+      ditherCtx.fillRect(1, 1, 1, 1);
+
+      const pattern = bgCtx.createPattern(ditherCanvas, "repeat");
+      if (pattern) {
+        bgCtx.save();
+        bgCtx.globalCompositeOperation = "overlay";
+        bgCtx.fillStyle = pattern;
+        bgCtx.fillRect(0, 0, w, h);
+        bgCtx.restore();
+      }
+    };
 
     switch (type) {
-      case "solid":
-        bgCtx.fillStyle = color1;
-        bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+      case "flux":
+        bgCtx.fillStyle = "#000000";
+        bgCtx.fillRect(0, 0, w, h);
+
+        const layers = 8;
+        for (let l = 0; l < layers; l++) {
+          bgCtx.beginPath();
+          const yBase = (h / layers) * l + h / layers / 2;
+
+          bgCtx.moveTo(-100, h + 100);
+          bgCtx.lineTo(-100, yBase);
+
+          for (let x = 0; x <= w + 100; x += 20) {
+            const freq = 0.003;
+            const amp = 80 + l * 40;
+            const phase = l * 0.8;
+            const y =
+              yBase +
+              Math.sin(x * freq + phase) * amp +
+              Math.cos(x * 0.002 - phase) * (amp / 2);
+            bgCtx.lineTo(x, y);
+          }
+
+          bgCtx.lineTo(w + 100, h + 100);
+          bgCtx.closePath();
+
+          const grad = bgCtx.createLinearGradient(
+            0,
+            yBase - 100,
+            0,
+            yBase + 200
+          );
+          grad.addColorStop(0, l % 2 === 0 ? color2 : color1);
+          grad.addColorStop(0.5, "#000000");
+          grad.addColorStop(1, "#000000");
+
+          bgCtx.fillStyle = grad;
+          bgCtx.globalAlpha = 0.8;
+          bgCtx.fill();
+
+          bgCtx.strokeStyle = "rgba(255,255,255,0.15)";
+          bgCtx.lineWidth = 1;
+          bgCtx.stroke();
+        }
+        bgCtx.globalAlpha = 1;
+        applyDither(0.5, 1);
         break;
 
-      case "gradient":
-        const rad = (angle * Math.PI) / 180;
-        const x1 = bgCanvas.width / 2 + Math.cos(rad) * bgCanvas.width;
-        const y1 = bgCanvas.height / 2 + Math.sin(rad) * bgCanvas.height;
-        const x2 = bgCanvas.width / 2 - Math.cos(rad) * bgCanvas.width;
-        const y2 = bgCanvas.height / 2 - Math.sin(rad) * bgCanvas.height;
-
-        const gradient = bgCtx.createLinearGradient(x1, y1, x2, y2);
-        gradient.addColorStop(0, color1);
-        gradient.addColorStop(1, color2);
-        bgCtx.fillStyle = gradient;
-        bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+      case "wave":
+        bgCtx.fillStyle = "#000000";
+        bgCtx.fillRect(0, 0, w, h);
+        const waveCount = 15;
+        for (let i = 0; i < waveCount; i++) {
+          bgCtx.beginPath();
+          bgCtx.lineWidth = 2;
+          const alpha = (1 - i / waveCount) * 0.4;
+          bgCtx.strokeStyle = `${color2}${Math.floor(alpha * 255)
+            .toString(16)
+            .padStart(2, "0")}`;
+          const yOffset = (h / waveCount) * i;
+          bgCtx.moveTo(0, yOffset);
+          for (let x = 0; x < w; x += 10) {
+            const distortion = Math.sin(x * 0.004 + i * 0.4) * 60;
+            bgCtx.lineTo(x, yOffset + distortion);
+          }
+          bgCtx.stroke();
+        }
+        applyDither(0.1);
         break;
 
-      case "noise":
-        bgCtx.fillStyle = color1;
-        bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
-        const imageData = bgCtx.getImageData(
+      case "aura":
+        bgCtx.fillStyle = "#000000";
+        bgCtx.fillRect(0, 0, w, h);
+        const auraGrad = bgCtx.createRadialGradient(
+          w / 2,
+          h / 2,
           0,
-          0,
-          bgCanvas.width,
-          bgCanvas.height
+          w / 2,
+          h / 2,
+          w * 0.8
         );
-        const data = imageData.data;
-        for (let i = 0; i < data.length; i += 4) {
-          const noise = Math.random() * 50 - 25;
-          data[i] += noise;
-          data[i + 1] += noise;
-          data[i + 2] += noise;
-        }
-        bgCtx.putImageData(imageData, 0, 0);
+        auraGrad.addColorStop(0, color2 + "44");
+        auraGrad.addColorStop(0.5, color1);
+        auraGrad.addColorStop(1, "#000000");
+        bgCtx.fillStyle = auraGrad;
+        bgCtx.fillRect(0, 0, w, h);
+        applyDither(0.12);
         break;
 
-      case "grid":
+      case "concrete":
         bgCtx.fillStyle = color1;
-        bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
-        bgCtx.strokeStyle = color2;
-        bgCtx.lineWidth = 2;
-        const gridSize = 100;
-        for (let x = 0; x < bgCanvas.width; x += gridSize) {
+        bgCtx.fillRect(0, 0, w, h);
+        for (let i = 0; i < 2000; i++) {
+          const x = Math.random() * w;
+          const y = Math.random() * h;
+          const size = Math.random() * 2;
+          const shade = Math.random() * 25;
+          bgCtx.fillStyle = `rgba(${shade},${shade},${shade},0.3)`;
+          bgCtx.fillRect(x, y, size, size);
+        }
+        applyDither(0.1);
+        break;
+
+      case "carbon":
+        bgCtx.fillStyle = "#050505";
+        bgCtx.fillRect(0, 0, w, h);
+        const patternSize = 8;
+        for (let y = 0; y < h; y += patternSize) {
+          for (let x = 0; x < w; x += patternSize) {
+            bgCtx.fillStyle =
+              (x + y) % (patternSize * 2) === 0 ? "#111" : "#050505";
+            bgCtx.fillRect(x, y, patternSize, patternSize);
+          }
+        }
+        applyDither(0.05);
+        break;
+
+      case "brushed":
+        bgCtx.fillStyle = color1;
+        bgCtx.fillRect(0, 0, w, h);
+        for (let i = 0; i < h; i += 2) {
+          bgCtx.strokeStyle = `rgba(255,255,255,${Math.random() * 0.08})`;
           bgCtx.beginPath();
-          bgCtx.moveTo(x, 0);
-          bgCtx.lineTo(x, bgCanvas.height);
+          bgCtx.moveTo(0, i);
+          bgCtx.lineTo(w, i);
           bgCtx.stroke();
         }
-        for (let y = 0; y < bgCanvas.height; y += gridSize) {
-          bgCtx.beginPath();
-          bgCtx.moveTo(0, y);
-          bgCtx.lineTo(bgCanvas.width, y);
-          bgCtx.stroke();
-        }
+        applyDither(0.06);
         break;
     }
 
@@ -350,9 +547,9 @@ export function createCoverSection(): HTMLElement {
     }
 
     activeBtn.className =
-      "px-4 py-3 border border-white/40 bg-white/10 text-white/90 text-xs uppercase tracking-wider font-bold hover:bg-white/20 transition-all";
+      "px-4 py-3 border border-white/40 bg-white/10 text-white/90 text-[10px] uppercase tracking-wider font-bold hover:bg-white/20 transition-all";
     inactiveBtn.className =
-      "px-4 py-3 border border-white/20 text-white/40 text-xs uppercase tracking-wider font-bold hover:border-white/40 hover:text-white/60 transition-all";
+      "px-4 py-3 border border-white/20 text-white/40 text-[10px] uppercase tracking-wider font-bold hover:border-white/40 hover:text-white/60 transition-all";
 
     const baseRotation = maskPath.includes("ziak_mask") ? 0 : 270;
     rotationControl.value = baseRotation.toString();
@@ -513,141 +710,41 @@ export function createCoverSection(): HTMLElement {
     "#background-type"
   ) as HTMLSelectElement;
   const bgColor1Input = section.querySelector("#bg-color1") as HTMLInputElement;
-  const bgColor1Hex = section.querySelector(
-    "#bg-color1-hex"
-  ) as HTMLInputElement;
   const bgColor2Input = section.querySelector("#bg-color2") as HTMLInputElement;
-  const bgColor2Hex = section.querySelector(
-    "#bg-color2-hex"
-  ) as HTMLInputElement;
   const color2Container = section.querySelector(
     "#color2-container"
   ) as HTMLElement;
-  const gradientAngleContainer = section.querySelector(
-    "#gradient-angle-container"
-  ) as HTMLElement;
-  const gradientAngleInput = section.querySelector(
-    "#gradient-angle"
-  ) as HTMLInputElement;
-  const gradientAngleValue = section.querySelector(
-    "#gradient-angle-value"
-  ) as HTMLElement;
 
-  const textOpacityInput = section.querySelector(
-    "#text-opacity"
-  ) as HTMLInputElement;
-  const textOpacityValue = section.querySelector(
-    "#text-opacity-value"
-  ) as HTMLElement;
   const textColorInput = section.querySelector(
     "#text-color"
-  ) as HTMLInputElement;
-  const textColorHex = section.querySelector(
-    "#text-color-hex"
   ) as HTMLInputElement;
 
   bgTypeSelect.addEventListener("change", (e) => {
     const type = (e.target as HTMLSelectElement).value;
 
-    if (type === "gradient") {
+    if (type === "gradient" || type === "grid") {
       color2Container.style.display = "block";
-      gradientAngleContainer.style.display = "block";
-    } else if (type === "grid") {
-      color2Container.style.display = "block";
-      gradientAngleContainer.style.display = "none";
     } else {
       color2Container.style.display = "none";
-      gradientAngleContainer.style.display = "none";
     }
 
-    generateBackground(
-      type,
-      bgColor1Input.value,
-      bgColor2Input.value,
-      parseFloat(gradientAngleInput.value)
-    );
+    generateBackground(type, bgColor1Input.value, bgColor2Input.value, 0);
   });
 
   bgColor1Input.addEventListener("input", (e) => {
     const value = (e.target as HTMLInputElement).value;
-    bgColor1Hex.value = value;
-    generateBackground(
-      bgTypeSelect.value,
-      value,
-      bgColor2Input.value,
-      parseFloat(gradientAngleInput.value)
-    );
-  });
-
-  bgColor1Hex.addEventListener("input", (e) => {
-    const value = (e.target as HTMLInputElement).value;
-    if (/^#[0-9A-F]{6}$/i.test(value)) {
-      bgColor1Input.value = value;
-      generateBackground(
-        bgTypeSelect.value,
-        value,
-        bgColor2Input.value,
-        parseFloat(gradientAngleInput.value)
-      );
-    }
+    generateBackground(bgTypeSelect.value, value, bgColor2Input.value, 0);
   });
 
   bgColor2Input.addEventListener("input", (e) => {
     const value = (e.target as HTMLInputElement).value;
-    bgColor2Hex.value = value;
-    generateBackground(
-      bgTypeSelect.value,
-      bgColor1Input.value,
-      value,
-      parseFloat(gradientAngleInput.value)
-    );
-  });
-
-  bgColor2Hex.addEventListener("input", (e) => {
-    const value = (e.target as HTMLInputElement).value;
-    if (/^#[0-9A-F]{6}$/i.test(value)) {
-      bgColor2Input.value = value;
-      generateBackground(
-        bgTypeSelect.value,
-        bgColor1Input.value,
-        value,
-        parseFloat(gradientAngleInput.value)
-      );
-    }
-  });
-
-  gradientAngleInput.addEventListener("input", (e) => {
-    const value = parseFloat((e.target as HTMLInputElement).value);
-    gradientAngleValue.textContent = `${value}°`;
-    generateBackground(
-      bgTypeSelect.value,
-      bgColor1Input.value,
-      bgColor2Input.value,
-      value
-    );
+    generateBackground(bgTypeSelect.value, bgColor1Input.value, value, 0);
   });
 
   textColorInput.addEventListener("input", (e) => {
     const value = (e.target as HTMLInputElement).value;
-    textColorHex.value = value;
-    updateMainText("LA FORGE", parseFloat(textOpacityInput.value), value);
-    updateSecondaryText("ZIAK", parseFloat(textOpacityInput.value), value);
-  });
-
-  textColorHex.addEventListener("input", (e) => {
-    const value = (e.target as HTMLInputElement).value;
-    if (/^#[0-9A-F]{6}$/i.test(value)) {
-      textColorInput.value = value;
-      updateMainText("LA FORGE", parseFloat(textOpacityInput.value), value);
-      updateSecondaryText("ZIAK", parseFloat(textOpacityInput.value), value);
-    }
-  });
-
-  textOpacityInput.addEventListener("input", (e) => {
-    const value = parseFloat((e.target as HTMLInputElement).value);
-    textOpacityValue.textContent = value.toFixed(2);
-    updateMainText("LA FORGE", value, textColorInput.value);
-    updateSecondaryText("ZIAK", value, textColorInput.value);
+    updateMainText("LA FORGE", 0.95, value);
+    updateSecondaryText("ZIAK", 0.95, value);
   });
 
   rotationControl.addEventListener("input", (e) => {
@@ -719,47 +816,171 @@ export function createCoverSection(): HTMLElement {
 
   loadMask("/ziak_mask.glb", maskZiakBtn, maskZzzBtn);
 
-  const tabBackground = section.querySelector(
-    "#tab-background"
+  const tabQuick = section.querySelector("#tab-quick") as HTMLButtonElement;
+  const tabAdvanced = section.querySelector(
+    "#tab-advanced"
   ) as HTMLButtonElement;
-  const tabMask = section.querySelector("#tab-mask") as HTMLButtonElement;
-  const tabMaterial = section.querySelector(
-    "#tab-material"
-  ) as HTMLButtonElement;
-
-  const tabContentBackground = section.querySelector(
-    "#tab-content-background"
+  const tabContentQuick = section.querySelector(
+    "#tab-content-quick"
   ) as HTMLElement;
-  const tabContentMask = section.querySelector(
-    "#tab-content-mask"
-  ) as HTMLElement;
-  const tabContentMaterial = section.querySelector(
-    "#tab-content-material"
+  const tabContentAdvanced = section.querySelector(
+    "#tab-content-advanced"
   ) as HTMLElement;
 
-  function switchTab(activeTab: HTMLButtonElement, activeContent: HTMLElement) {
-    [tabBackground, tabMask, tabMaterial].forEach((tab) => {
-      tab.className =
-        "flex-1 px-4 py-3 text-[10px] uppercase tracking-wider font-bold text-white/40 hover:text-white/60 transition-all";
-    });
-    [tabContentBackground, tabContentMask, tabContentMaterial].forEach(
-      (content) => {
-        content.style.display = "none";
-      }
-    );
-
+  function switchTab(
+    activeTab: HTMLButtonElement,
+    activeContent: HTMLElement,
+    inactiveTab: HTMLButtonElement,
+    inactiveContent: HTMLElement
+  ) {
+    inactiveTab.className =
+      "flex-1 px-4 py-3 text-[10px] uppercase tracking-wider font-bold text-white/40 hover:text-white/60 transition-all";
     activeTab.className =
       "flex-1 px-4 py-3 text-[10px] uppercase tracking-wider font-bold text-white bg-white/10 border-b-2 border-white transition-all";
+
+    inactiveContent.style.display = "none";
     activeContent.style.display = "block";
   }
 
-  tabBackground.addEventListener("click", () =>
-    switchTab(tabBackground, tabContentBackground)
+  tabQuick.addEventListener("click", () =>
+    switchTab(tabQuick, tabContentQuick, tabAdvanced, tabContentAdvanced)
   );
-  tabMask.addEventListener("click", () => switchTab(tabMask, tabContentMask));
-  tabMaterial.addEventListener("click", () =>
-    switchTab(tabMaterial, tabContentMaterial)
+  tabAdvanced.addEventListener("click", () =>
+    switchTab(tabAdvanced, tabContentAdvanced, tabQuick, tabContentQuick)
   );
+
+  function applyPreset(preset: Preset) {
+    bgTypeSelect.value = preset.bgType;
+    bgColor1Input.value = preset.bgColor1;
+    bgColor2Input.value = preset.bgColor2;
+    textColorInput.value = preset.textColor;
+    rotationControl.value = preset.rotation.toString();
+    positionXControl.value = preset.positionX.toString();
+    positionYControl.value = preset.positionY.toString();
+    scaleControl.value = preset.scale.toString();
+    metalnessControl.value = preset.metalness.toString();
+    roughnessControl.value = preset.roughness.toString();
+
+    bgTypeSelect.dispatchEvent(new Event("change"));
+    generateBackground(
+      preset.bgType,
+      preset.bgColor1,
+      preset.bgColor2,
+      preset.gradientAngle
+    );
+    updateMainText("LA FORGE", preset.textOpacity, preset.textColor);
+    updateSecondaryText("ZIAK", preset.textOpacity, preset.textColor);
+
+    rotationValue.textContent = `${preset.rotation}°`;
+    positionXValue.textContent = preset.positionX.toFixed(1);
+    positionYValue.textContent = preset.positionY.toFixed(1);
+    scaleValue.textContent = preset.scale.toFixed(1);
+    metalnessValue.textContent = preset.metalness.toFixed(2);
+    roughnessValue.textContent = preset.roughness.toFixed(2);
+
+    if (maskModel) {
+      maskModel.rotation.y = (preset.rotation * Math.PI) / 180;
+      maskModel.position.x = preset.positionX;
+      maskModel.position.y = preset.positionY;
+
+      const box = new THREE.Box3().setFromObject(maskModel);
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const baseScale = 1.2 / maxDim;
+      maskModel.scale.set(
+        baseScale * preset.scale,
+        baseScale * preset.scale,
+        baseScale * preset.scale
+      );
+    }
+
+    if (maskMaterial) {
+      maskMaterial.metalness = preset.metalness;
+      maskMaterial.roughness = preset.roughness;
+    }
+
+    const targetBtn = preset.mask.includes("ziak") ? maskZiakBtn : maskZzzBtn;
+    const otherBtn = preset.mask.includes("ziak") ? maskZzzBtn : maskZiakBtn;
+    if (
+      preset.mask !==
+      (maskModel
+        ? maskZiakBtn.className.includes("bg-white/10")
+          ? "/ziak_mask.glb"
+          : "/zzz.glb"
+        : "/ziak_mask.glb")
+    ) {
+      loadMask(preset.mask, targetBtn, otherBtn);
+    }
+  }
+
+  const presetButtons = section.querySelectorAll(".preset-btn");
+  presetButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const presetName = (btn as HTMLElement).dataset.preset!;
+      applyPreset(PRESETS[presetName]);
+    });
+  });
+
+  const randomizeBtn = section.querySelector("#randomize") as HTMLButtonElement;
+  randomizeBtn.addEventListener("click", () => {
+    const palette =
+      COLOR_PALETTES[Math.floor(Math.random() * COLOR_PALETTES.length)];
+    const types = ["aura", "concrete", "carbon", "wave", "flux", "brushed"];
+    const randomType = types[Math.floor(Math.random() * types.length)];
+    const randomAngle = Math.floor(Math.random() * 360);
+
+    const randomRotation = [0, 45, 90, 135, 180, 225, 270, 315][
+      Math.floor(Math.random() * 8)
+    ];
+    const randomX = Math.random() * 0.6 - 0.3;
+    const randomY = Math.random() * 0.6 - 0.3;
+    const randomScale = 0.9 + Math.random() * 0.5;
+    const randomMetal = 0.8 + Math.random() * 0.2;
+    const randomRough = Math.random() * 0.3;
+
+    bgTypeSelect.value = randomType;
+    bgColor1Input.value = palette.bg1;
+    bgColor2Input.value = palette.bg2;
+    textColorInput.value = palette.text;
+    rotationControl.value = randomRotation.toString();
+    positionXControl.value = randomX.toFixed(1);
+    positionYControl.value = randomY.toFixed(1);
+    scaleControl.value = randomScale.toFixed(1);
+    metalnessControl.value = randomMetal.toFixed(2);
+    roughnessControl.value = randomRough.toFixed(2);
+
+    bgTypeSelect.dispatchEvent(new Event("change"));
+    generateBackground(randomType, palette.bg1, palette.bg2, randomAngle);
+    updateMainText("LA FORGE", 1, palette.text);
+    updateSecondaryText("ZIAK", 1, palette.text);
+
+    rotationValue.textContent = `${randomRotation}°`;
+    positionXValue.textContent = randomX.toFixed(1);
+    positionYValue.textContent = randomY.toFixed(1);
+    scaleValue.textContent = randomScale.toFixed(1);
+    metalnessValue.textContent = randomMetal.toFixed(2);
+    roughnessValue.textContent = randomRough.toFixed(2);
+
+    if (maskModel) {
+      maskModel.rotation.y = (randomRotation * Math.PI) / 180;
+      maskModel.position.x = randomX;
+      maskModel.position.y = randomY;
+      const box = new THREE.Box3().setFromObject(maskModel);
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const baseScale = 1.2 / maxDim;
+      maskModel.scale.set(
+        baseScale * randomScale,
+        baseScale * randomScale,
+        baseScale * randomScale
+      );
+    }
+
+    if (maskMaterial) {
+      maskMaterial.metalness = randomMetal;
+      maskMaterial.roughness = randomRough;
+    }
+  });
 
   const downloadBtn = section.querySelector(
     "#download-cover"
@@ -790,50 +1011,6 @@ export function createCoverSection(): HTMLElement {
   toggleGridBtn.addEventListener("click", () => {
     gridVisible = !gridVisible;
     grid.style.opacity = gridVisible ? "1" : "0";
-  });
-
-  const randomizeBtn = section.querySelector("#randomize") as HTMLButtonElement;
-  randomizeBtn.addEventListener("click", () => {
-    const randomRotation = Math.floor(Math.random() * 360);
-    const randomX = Math.random() * 2.4 - 1.2;
-    const randomY = Math.random() * 2.4 - 1.2;
-    const randomScale = 0.7 + Math.random() * 1.0;
-
-    rotationControl.value = randomRotation.toString();
-    positionXControl.value = randomX.toFixed(1);
-    positionYControl.value = randomY.toFixed(1);
-    scaleControl.value = randomScale.toFixed(1);
-
-    rotationControl.dispatchEvent(new Event("input"));
-    positionXControl.dispatchEvent(new Event("input"));
-    positionYControl.dispatchEvent(new Event("input"));
-    scaleControl.dispatchEvent(new Event("input"));
-
-    const types = ["solid", "gradient", "noise", "grid"];
-    const randomType = types[Math.floor(Math.random() * types.length)];
-    bgTypeSelect.value = randomType;
-
-    const generateDarkColor = () => {
-      const r = Math.floor(Math.random() * 120);
-      const g = Math.floor(Math.random() * 120);
-      const b = Math.floor(Math.random() * 120);
-      return `#${r.toString(16).padStart(2, "0")}${g
-        .toString(16)
-        .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
-    };
-
-    const randomColor1 = generateDarkColor();
-    const randomColor2 = generateDarkColor();
-    const randomAngle = Math.floor(Math.random() * 360);
-
-    bgColor1Input.value = randomColor1;
-    bgColor1Hex.value = randomColor1;
-    bgColor2Input.value = randomColor2;
-    bgColor2Hex.value = randomColor2;
-    gradientAngleInput.value = randomAngle.toString();
-    gradientAngleValue.textContent = `${randomAngle}°`;
-
-    bgTypeSelect.dispatchEvent(new Event("change"));
   });
 
   function animate() {

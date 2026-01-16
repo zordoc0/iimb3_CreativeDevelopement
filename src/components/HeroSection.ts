@@ -3,6 +3,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 export function createHeroSection(): HTMLElement {
   const section = document.createElement("section");
+  section.id = "home";
   section.className =
     "w-full min-h-screen flex justify-center items-center relative overflow-hidden bg-black";
 

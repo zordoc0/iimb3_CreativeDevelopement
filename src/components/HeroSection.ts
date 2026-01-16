@@ -116,6 +116,7 @@ export function createHeroSection(): HTMLElement {
   const loader = new GLTFLoader();
   let model: THREE.Group;
 
+  const mouse = { x: 0, y: 0 };
   const targetRotation = { x: 0, y: 0 };
 
   window.addEventListener("mousemove", (event) => {

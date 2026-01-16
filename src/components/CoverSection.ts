@@ -164,10 +164,11 @@ export function createCoverSection(): HTMLElement {
           </div>
         </div>
 
-        <div class="lg:col-span-2 space-y-4">
+        <div id="presets-container" class="lg:col-span-2 space-y-4">
           
           <div class="border border-white/10 bg-white/2 p-6">
-            <label class="text-white/80 text-xs uppercase tracking-wider font-bold mb-3 block">Presets Émotionnels</label>
+            <label class="text-white/80 text-xs uppercase tracking-wider font-bold mb-3 block">Presets </label>
+            <p class="text-white/40 text-[11px] tracking-wider font-bold mb-3">Un preset permet de générer une cover avec des options predefinies.</p>
             <div class="grid grid-cols-2 gap-2">
               <button data-preset="akimbo" class="preset-btn px-4 py-3 border border-white/20 text-white/60 text-[10px] uppercase tracking-wider font-bold hover:border-white/40 hover:text-white transition-all">
                 Akimbo
@@ -184,7 +185,12 @@ export function createCoverSection(): HTMLElement {
             </div>
           </div>
 
-          <div class="border border-white/10 bg-white/2">
+
+          <button id="show-advanced-content" class="w-full px-8 py-4 bg-white text-black font-bold uppercase text-sm tracking-[0.3em] hover:bg-white/90 transition-all hover:scale-[1.02] active:scale-95">
+            Afficher les options avancées ⏷
+          </button>
+
+          <div id="presets-container-advanced" class="border border-white/10 bg-white/2" style="display: none;">
             <div class="flex border-b border-white/10">
               <button id="tab-quick" class="flex-1 px-4 py-3 text-[10px] uppercase tracking-wider font-bold text-white bg-white/10 border-b-2 border-white transition-all">
                 Rapide
@@ -1022,6 +1028,19 @@ export function createCoverSection(): HTMLElement {
   window.addEventListener("resize", updateSize);
   const resizeObserver = new ResizeObserver(() => updateSize());
   resizeObserver.observe(container);
+
+
+
+  const presetsContainerAdvanced = section.querySelector("#presets-container-advanced") as HTMLElement  
+  const showAdvancedContentBtn = section.querySelector("#show-advanced-content") as HTMLButtonElement;
+  let advancedContentVisible = false;
+
+
+  showAdvancedContentBtn.addEventListener("click", () => {
+    advancedContentVisible = !advancedContentVisible;
+    showAdvancedContentBtn.textContent = advancedContentVisible ? "Masquer les options avancées ⏶" : "Afficher les options avancées ⏷";
+    presetsContainerAdvanced.style.display = advancedContentVisible ? "block" : "none";
+  });
 
   return section;
 }

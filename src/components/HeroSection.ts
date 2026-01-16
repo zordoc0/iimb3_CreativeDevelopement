@@ -1,14 +1,16 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { loadingManager } from "./Loader";
 
 export function createHeroSection(): HTMLElement {
+  loadingManager.registerAsset();
   const section = document.createElement("section");
   section.id = "home";
   section.className =
     "w-full min-h-screen flex justify-center items-center relative overflow-hidden bg-black";
 
   section.innerHTML = `
-    <div class="absolute inset-0 z-1 pointer-events-none opacity-10" 
+    <div id="hero-section-container" class="absolute inset-0 z-1 pointer-events-none opacity-10" 
          style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0); background-size: 30px 30px;">
     </div>
     <div id="three-container" class="absolute inset-0 w-full h-full z-0"></div>
@@ -17,7 +19,7 @@ export function createHeroSection(): HTMLElement {
 
 
       <div class="absolute bottom-12 left-12 group z-20">
-        <div class="text-[40px] font-black text-white/70 font-poppins leading-none mb-[-10px] tracking-tighter uppercase">Forge</div>
+        <div class="text-[40px] font-black text-white/70 font-poppins leading-none mb-[-10px] tracking-tighter uppercase">ZIAK</div>
         <div class="text-[10px] text-white/70 font-mono tracking-[0.5em] uppercase border-t border-white/10 pt-2">
           LA FORGE
         </div>
@@ -47,21 +49,16 @@ export function createHeroSection(): HTMLElement {
       <p class="text-white/40 text-xl font-poppins font-light tracking-[0.4em] mt-4 italic">17/01/2026</p>
       <div class="mt-12 flex flex-col items-end gap-4 group cursor-pointer">
         <div class="relative px-8 py-3 border border-white/20 overflow-hidden transition-all group-hover:border-white group-hover:bg-white/5">
-          <a href="#" class="text-white text-sm font-bold uppercase tracking-[0.4em] relative z-10">Entrez dans la forge</a>
+          <a href="#cover-section-container" class="text-white text-sm font-bold uppercase tracking-[0.4em] relative z-10">Entrez dans la forge</a>
           <div class="absolute top-0 left-0 w-1 h-1 bg-white"></div>
           <div class="absolute bottom-0 right-0 w-1 h-1 bg-white"></div>
         </div>
       </div>
     </div>
     <img src="/dither_cut1.png" alt="Masque" class="w-90 h-70 cursor-pointer absolute bottom-10 right-10  animate-float">
-
-    
-
-    <div id="loader-progress" class="absolute bottom-0 left-0 h-1 bg-white z-50 transition-all duration-300" style="width: 0%"></div>
   `;
 
   const container = section.querySelector("#three-container") as HTMLElement;
-  const progressBar = section.querySelector("#loader-progress") as HTMLElement;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
@@ -144,7 +141,8 @@ export function createHeroSection(): HTMLElement {
       scene.add(model);
 
       model.rotation.y = Math.PI;
-      progressBar.style.opacity = "0";
+
+      loadingManager.assetLoaded();
 
       model.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
@@ -157,10 +155,7 @@ export function createHeroSection(): HTMLElement {
         }
       });
     },
-    (xhr) => {
-      const percent = (xhr.loaded / xhr.total) * 100;
-      progressBar.style.width = `${percent}%`;
-    },
+    undefined,
     (error) => {
       console.error("Error loading model:", error);
     }
@@ -186,11 +181,10 @@ export function createHeroSection(): HTMLElement {
     requestAnimationFrame(animate);
     const elapsedTime = clock.getElapsedTime();
 
-
     //souris
     if (model) {
-      targetRotation.y = -1.5 + mouse.x * 0.15; 
-      targetRotation.x = -mouse.y * 0.1; 
+      targetRotation.y = -1.5 + mouse.x * 0.15;
+      targetRotation.x = -mouse.y * 0.1;
 
       model.rotation.y += (targetRotation.y - model.rotation.y) * 0.05;
       model.rotation.x += (targetRotation.x - model.rotation.x) * 0.05;

@@ -289,3 +289,52 @@ nav a:hover::after {
     @apply bg-background text-foreground;
   }
 }
+
+
+.loader-letter-minimal {
+  display: inline-block;
+  opacity: 0;
+  animation: letter-minimal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(0.2s + var(--i) * 0.06s);
+}
+
+@keyframes letter-minimal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loader-fade-minimal {
+  opacity: 0;
+  animation: fade-minimal 0.6s ease-out forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes fade-minimal {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.loader-exit-minimal {
+  animation: exit-minimal 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+@keyframes exit-minimal {
+  0% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    opacity: 0;
+    clip-path: inset(50% 0 50% 0);
+  }
+}

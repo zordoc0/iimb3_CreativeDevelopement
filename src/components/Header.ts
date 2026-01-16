@@ -1,7 +1,9 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { loadingManager } from "./Loader";
 
 export function createHeader(): HTMLElement {
+  loadingManager.registerAsset();
   const header = document.createElement("header");
   header.className = "fixed top-0 left-0 w-full z-30 px-8 py-4";
 
@@ -11,8 +13,11 @@ export function createHeader(): HTMLElement {
         <h1 class="text-white/50 text-[10px] md:text-xs leading-none font-poppins uppercase font-bold tracking-[0.2em]">LA FORGE | ZIAK</h1>
       </div>
       
-      <div class="flex justify-center h-12 relative">
-        <div id="header-mask-container" class="w-20 h-20 absolute -top-4 cursor-pointer "></div>
+      <div class="flex justify-center items-center flex-col h-12 relative">
+        <a href="#hero-section-container" class="cursor-pointer">
+          <div id="header-mask-container" class="w-20 h-20 cursor-pointer"></div>
+        </a>
+        <p class="text-white/50 text-[10px] md:text-xs leading-none font-poppins uppercase font-bold tracking-[0.2em]">Ziak</p>
       </div>
 
       <div class="flex justify-end gap-4 md:gap-8">
@@ -71,9 +76,16 @@ export function createHeader(): HTMLElement {
           }
         }
       });
+
+      // Signaler au loading manager que ce modèle est chargé
+      loadingManager.assetLoaded();
     },
     undefined,
-    (error) => console.error("erreryeruezureur", error)
+    (error) => {
+      console.error("Erreur chargement masque header:", error);
+      // Même en cas d'erreur, signaler que le chargement est "terminé" pour ne pas bloquer
+      loadingManager.assetLoaded();
+    }
   );
 
   function animate() {

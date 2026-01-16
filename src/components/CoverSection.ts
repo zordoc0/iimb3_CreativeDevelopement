@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { loadingManager } from "./Loader";
 
 type Preset = {
   name: string;
@@ -97,13 +98,15 @@ const COLOR_PALETTES = [
 ];
 
 export function createCoverSection(): HTMLElement {
+  loadingManager.registerAsset();
+
   const section = document.createElement("section");
   section.id = "cover";
   section.className =
     "w-full min-h-screen flex justify-center items-center relative overflow-hidden bg-black py-20";
 
   section.innerHTML = `
-    <div class="w-full max-w-7xl mx-auto px-8 z-10 relative">
+    <div id="cover-section-container" class="w-full max-w-7xl mx-auto px-8 z-10 relative">
       <div class="mb-12 text-center relative">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] opacity-15 pointer-events-none">
           <img 
@@ -114,7 +117,7 @@ export function createCoverSection(): HTMLElement {
         </div>
         <div class="relative z-10">
           <div class="text-white/40 text-xs uppercase tracking-[0.5em] mb-4 font-poppins">Générateur de Cover</div>
-          <h2 class="text-white text-6xl md:text-8xl font-bold uppercase tracking-tighter font-anton">LA FORGE</h2>
+          <h2 class="text-white text-6xl md:text-8xl font-bold uppercase tracking-tighter font-anton">LA FORGE.</h2>
         </div>
       </div>
 
@@ -531,6 +534,7 @@ export function createCoverSection(): HTMLElement {
   let maskModel: THREE.Group;
   let maskMaterial: THREE.MeshStandardMaterial;
   const loader = new GLTFLoader();
+  let isInitialLoad = true;
 
   function loadMask(
     maskPath: string,
@@ -594,9 +598,21 @@ export function createCoverSection(): HTMLElement {
             mesh.material = maskMaterial;
           }
         });
+
+        // Signaler au loading manager que le modèle initial est chargé
+        if (isInitialLoad) {
+          loadingManager.assetLoaded();
+          isInitialLoad = false;
+        }
       },
       undefined,
-      (error) => console.error("Erreur chargement masque:", error)
+      (error) => {
+        console.error("Erreur chargement masque:", error);
+        if (isInitialLoad) {
+          loadingManager.assetLoaded();
+          isInitialLoad = false;
+        }
+      }
     );
   }
 
@@ -1029,17 +1045,22 @@ export function createCoverSection(): HTMLElement {
   const resizeObserver = new ResizeObserver(() => updateSize());
   resizeObserver.observe(container);
 
-
-
-  const presetsContainerAdvanced = section.querySelector("#presets-container-advanced") as HTMLElement  
-  const showAdvancedContentBtn = section.querySelector("#show-advanced-content") as HTMLButtonElement;
+  const presetsContainerAdvanced = section.querySelector(
+    "#presets-container-advanced"
+  ) as HTMLElement;
+  const showAdvancedContentBtn = section.querySelector(
+    "#show-advanced-content"
+  ) as HTMLButtonElement;
   let advancedContentVisible = false;
-
 
   showAdvancedContentBtn.addEventListener("click", () => {
     advancedContentVisible = !advancedContentVisible;
-    showAdvancedContentBtn.textContent = advancedContentVisible ? "Masquer les options avancées ⏶" : "Afficher les options avancées ⏷";
-    presetsContainerAdvanced.style.display = advancedContentVisible ? "block" : "none";
+    showAdvancedContentBtn.textContent = advancedContentVisible
+      ? "Masquer les options avancées ⏶"
+      : "Afficher les options avancées ⏷";
+    presetsContainerAdvanced.style.display = advancedContentVisible
+      ? "block"
+      : "none";
   });
 
   return section;

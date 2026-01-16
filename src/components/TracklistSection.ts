@@ -19,8 +19,8 @@ export function createTracklistSection(): HTMLElement {
     </div>
 
     <div class="relative z-10">
-      <h2 class="bold text-[15vw] md:text-[12rem] font-anton uppercase text-white leading-none tracking-tighter">
-        TRACKS
+      <h2 class="font-black bold text-[15vw] md:text-[12rem] font-anton uppercase text-white leading-none tracking-tighter">
+        TRACKS.
       </h2>
     </div>
   `;

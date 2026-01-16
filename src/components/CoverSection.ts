@@ -363,13 +363,10 @@ export function createCoverSection(): HTMLElement {
     type: string,
     color1: string,
     color2: string,
-    angle: number
   ) {
     bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
     const w = bgCanvas.width;
     const h = bgCanvas.height;
-    const cx = w / 2;
-    const cy = h / 2;
 
     const applyDither = (opacity: number = 0.2, density: number = 1) => {
       const ditherSize = 4;
@@ -529,7 +526,7 @@ export function createCoverSection(): HTMLElement {
     bgTexture.needsUpdate = true;
   }
 
-  generateBackground("solid", "#000000", "#1a1a1a", 0);
+  generateBackground("solid", "#000000", "#1a1a1a");
 
   let maskModel: THREE.Group;
   let maskMaterial: THREE.MeshStandardMaterial;
@@ -750,17 +747,17 @@ export function createCoverSection(): HTMLElement {
       color2Container.style.display = "none";
     }
 
-    generateBackground(type, bgColor1Input.value, bgColor2Input.value, 0);
+    generateBackground(type, bgColor1Input.value, bgColor2Input.value);
   });
 
   bgColor1Input.addEventListener("input", (e) => {
     const value = (e.target as HTMLInputElement).value;
-    generateBackground(bgTypeSelect.value, value, bgColor2Input.value, 0);
+    generateBackground(bgTypeSelect.value, value, bgColor2Input.value);
   });
 
   bgColor2Input.addEventListener("input", (e) => {
     const value = (e.target as HTMLInputElement).value;
-    generateBackground(bgTypeSelect.value, bgColor1Input.value, value, 0);
+    generateBackground(bgTypeSelect.value, bgColor1Input.value, value);
   });
 
   textColorInput.addEventListener("input", (e) => {
@@ -887,8 +884,7 @@ export function createCoverSection(): HTMLElement {
     generateBackground(
       preset.bgType,
       preset.bgColor1,
-      preset.bgColor2,
-      preset.gradientAngle
+      preset.bgColor2
     );
     updateMainText("LA FORGE", preset.textOpacity, preset.textColor);
     updateSecondaryText("ZIAK", preset.textOpacity, preset.textColor);
@@ -949,7 +945,6 @@ export function createCoverSection(): HTMLElement {
       COLOR_PALETTES[Math.floor(Math.random() * COLOR_PALETTES.length)];
     const types = ["aura", "concrete", "carbon", "wave", "flux", "brushed"];
     const randomType = types[Math.floor(Math.random() * types.length)];
-    const randomAngle = Math.floor(Math.random() * 360);
 
     const randomRotation = [0, 45, 90, 135, 180, 225, 270, 315][
       Math.floor(Math.random() * 8)
@@ -972,8 +967,8 @@ export function createCoverSection(): HTMLElement {
     roughnessControl.value = randomRough.toFixed(2);
 
     bgTypeSelect.dispatchEvent(new Event("change"));
-    generateBackground(randomType, palette.bg1, palette.bg2, randomAngle);
-    updateMainText("LA FORGE", 1, palette.text);
+    generateBackground(randomType, palette.bg1, palette.bg2);  
+      updateMainText("LA FORGE", 1, palette.text);
     updateSecondaryText("ZIAK", 1, palette.text);
 
     rotationValue.textContent = `${randomRotation}°`;

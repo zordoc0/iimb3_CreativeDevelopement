@@ -1,52 +1,75 @@
 export function createFooter(): HTMLElement {
   const footer = document.createElement("footer");
-  footer.className = "w-full py-12 mt-16 border-t border-white/10 bg-black/50";
+  footer.className = "w-full py-16 mt-16 relative overflow-hidden";
   footer.innerHTML = `
-    <div class="w-11/12 max-w-7xl mx-auto">
-      <!-- Navigation principale -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
-        <!-- Logo / Marque -->
-        <div class="flex flex-col gap-4">
-          <h3 class="text-white text-2xl font-bold tracking-wider">ZIAK</h3>
-          <p class="text-white/50 text-sm font-poppins leading-relaxed">
-            La musique qui transcende les frontières. Découvrez l'univers unique de ZIAK.
-          </p>
-        </div>
+    <!-- Background animé -->
+    <div class="absolute inset-0 bg-gradient-to-t from-purple-900/20 via-black to-black"></div>
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] animate-pulse-slow"></div>
+    
+    <div class="relative z-10 w-11/12 max-w-6xl mx-auto">
+      <!-- Message créatif principal -->
+      <div class="text-center mb-12">
+        <p class="text-white/30 text-sm uppercase tracking-[0.3em] mb-4">ZIAK</p>
+        <h3 class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-white mb-6">
+          LA FORGE🔥
+        </h3>
+        <p class="text-white/50 text-lg font-light max-w-md mx-auto">
+          Nouvel album disponible le 17 Janvier.
+        </p>
+      </div>
 
-        <!-- Navigation -->
-        <div class="flex flex-col gap-3">
-          <h4 class="text-white text-sm font-bold uppercase tracking-widest mb-2">Navigation</h4>
-          <a href="#home" class="relative w-fit text-white/60 hover:text-white transition text-sm after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">Accueil</a>
-          <a href="#tracklist" class="relative w-fit text-white/60 hover:text-white transition text-sm after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">Discographie</a>
-          <a href="#cover" class="relative w-fit text-white/60 hover:text-white transition text-sm after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">Concerts</a>
-        </div>
+      <!-- Réseaux sociaux stylisés -->
+      <div class="flex justify-center gap-6 mb-12">
+        <a href="https://www.instagram.com/ziakimbo/" target="_blank" rel="noopener" 
+           class="group w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-purple-600/30 hover:border-purple-500/50 hover:scale-110 transition-all duration-300">
+          <svg class="w-6 h-6 text-white/60 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+            <img src="/instagram-icon.svg" alt="Instagram" />
+          </svg>
+        </a>
+        <a href="http://youtube.com/@ZiakCC" target="_blank" rel="noopener"
+           class="group w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-red-600/30 hover:border-red-500/50 hover:scale-110 transition-all duration-300">
+          <svg class="w-6 h-6 text-white/60 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+            <img src="/youtube-icon.svg" alt="YouTube"/>
+          </svg>
+        </a>
+        <a href="https://open.spotify.com/intl-fr/artist/2ubn2zwyYaLdHOCKnTouU2" target="_blank" rel="noopener"
+           class="group w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-green-600/30 hover:border-green-500/50 hover:scale-110 transition-all duration-300">
+          <svg class="w-5 h-5 text-white/60 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+            <img src="/spotify-icon.svg" alt="Spotify"/>
+          </svg>
+        </a>
+      </div>
 
-        <!-- Réseaux sociaux -->
-        <div class="flex flex-col gap-3">
-          <h4 class="text-white text-sm font-bold uppercase tracking-widest mb-2">Réseaux</h4>
-          <a href="https://www.instagram.com/ziakimbo/" target="_blank" rel="noopener" class="relative w-fit text-white/60 hover:text-white transition text-sm after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">Instagram</a>
-          <a href="http://youtube.com/@ZiakCC" target="_blank" rel="noopener" class="relative w-fit text-white/60 hover:text-white transition text-sm after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">YouTube</a>
-          <a href="https://open.spotify.com/intl-fr/artist/2ubn2zwyYaLdHOCKnTouU2" target="_blank" rel="noopener" class="relative w-fit text-white/60 hover:text-white transition text-sm after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">Spotify</a>
-        </div>
-
-        <!-- Contact -->
-        <div class="flex flex-col gap-3">
-          <h4 class="text-white text-sm font-bold uppercase tracking-widest mb-2">Contact</h4>
-          <p class="text-white/60 text-sm">contact@laforge.com</p>
-          <p class="text-white/60 text-sm">Grigny, France</p>
-          <p class="text-white/60 text-sm">Management : 17sx@laforge.com</p>
+      <!-- Texte défilant -->
+      <div class="overflow-hidden py-4 mb-8 border-y border-white/5">
+        <div class="flex animate-marquee whitespace-nowrap">
+          <span class="text-white/10 text-xl font-black uppercase tracking-widest mx-8">ZIAK</span>
+          <span class="text-purple-500/30 text-xl mx-4">✦</span>
+          <span class="text-white/10 text-xl font-black uppercase tracking-widest mx-8">L'ENNEMI</span>
+          <span class="text-purple-500/30 text-xl mx-4">✦</span>
+          <span class="text-white/10 text-xl font-black uppercase tracking-widest mx-8">LA FORGE</span>
+          <span class="text-purple-500/30 text-xl mx-4">✦</span>
+          <span class="text-white/10 text-xl font-black uppercase tracking-widest mx-8">LA REUSSITE OU L'OUBLI</span>
+          <span class="text-purple-500/30 text-xl mx-4">✦</span>
+          <span class="text-white/10 text-xl font-black uppercase tracking-widest mx-8">UN VRAI COUTEAU</span>
+          <span class="text-purple-500/30 text-xl mx-4">✦</span>
+          <span class="text-white/10 text-xl font-black uppercase tracking-widest mx-8">OUTRO</span>
+          <span class="text-purple-500/30 text-xl mx-4">✦</span>
+          <span class="text-white/10 text-xl font-black uppercase tracking-widest mx-8">LA FORGE</span>
+          <span class="text-purple-500/30 text-xl mx-4">✦</span>
+          <span class="text-white/10 text-xl font-black uppercase tracking-widest mx-8">AKIMBO</span>
+          <span class="text-purple-500/30 text-xl mx-4">✦</span>
         </div>
       </div>
 
-      <!-- Séparateur -->
-      <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="text-white/40 text-xs uppercase font-poppins tracking-widest">
-          &copy; 2024 LA FORGE | ZIAK. Tous droits réservés.
+      <!-- Footer minimal -->
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-center">
+        <p class="text-white/30 text-xs">
+          For the culture
         </p>
-        <div class="flex gap-6">
-          <a href="#mentions" class="relative w-fit text-white/40 hover:text-white/60 transition text-xs after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-[1px] after:bg-white/60 after:transition-all after:duration-300 hover:after:w-full">Mentions légales</a>
-          <a href="#privacy" class="relative w-fit text-white/40 hover:text-white/60 transition text-xs after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-[1px] after:bg-white/60 after:transition-all after:duration-300 hover:after:w-full">Confidentialité</a>
-        </div>
+        <p class="text-white/20 text-xs">
+          &copy; 2024 ZIAK × LA FORGE — UHEH
+        </p>
       </div>
     </div>
   `;

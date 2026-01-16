@@ -29,6 +29,7 @@ bun run dev
 ```
 
 Accessible sur `http://localhost:5173`
+Ou sur `https://iimb3-creative-developement.vercel.app/`
 
 
-Fait pas Julien Menet et Noa Obringer 
+Fait pas Julien Menet et Noa Obringer   

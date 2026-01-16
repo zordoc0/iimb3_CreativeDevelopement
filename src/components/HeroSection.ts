@@ -17,45 +17,50 @@ export function createHeroSection(): HTMLElement {
 
     <div class="w-full h-full z-10 bg-linear-to-b from-black/80 via-transparent to-black/90 absolute inset-0 pointer-events-none"></div>
 
-
-      <div class="absolute bottom-12 left-12 group z-20">
-        <div class="text-[40px] font-black text-white/70 font-poppins leading-none mb-[-10px] tracking-tighter uppercase">ZIAK</div>
-        <div class="text-[10px] text-white/70 font-mono tracking-[0.5em] uppercase border-t border-white/10 pt-2">
-          LA FORGE
-        </div>
-      </div>
-
-      <div class="absolute right-12 bottom-12 flex flex-col items-end gap-2">
-        <div class="flex gap-1">
-          <div class="w-1 h-4 bg-white/40 animate-pulse"></div>
-          <div class="w-1 h-4 bg-white/30 animate-pulse delay-75"></div>
-          <div class="w-1 h-4 bg-white/20 animate-pulse delay-150"></div>
-          <div class="w-1 h-4 bg-white/10 animate-pulse delay-300"></div>
-        </div>
-        <div class="text-[9px] text-white font-mono uppercase tracking-widest">17/01/2026</div>
+    
+    <div class="hidden md:block absolute bottom-6 lg:bottom-12 left-6 lg:left-12 group z-20">
+      <div class="text-2xl lg:text-[40px] font-black text-white/70 font-poppins leading-none mb-[-5px] lg:mb-[-10px] tracking-tighter uppercase">ZIAK</div>
+      <div class="text-[8px] lg:text-[10px] text-white/70 font-mono tracking-[0.5em] uppercase border-t border-white/10 pt-2">
+        LA FORGE
       </div>
     </div>
 
-    <div class="absolute right-12 top-1/2 -translate-y-1/2 z-20 text-right flex flex-col items-end justify-center">
-      <div class="mb-4 overflow-hidden">
-        <span class="text-xs text-white/80 font-bold tracking-[0.5em] uppercase block mb-2 opacity-70">NOUVELLE ALBUM</span>
-        <div class="h-[2px] w-24 bg-white/40 ml-auto"></div>
+    <div class="hidden md:flex absolute right-6 lg:right-12 bottom-6 lg:bottom-12 flex-col items-end gap-2">
+      <div class="flex gap-1">
+        <div class="w-1 h-4 bg-white/40 animate-pulse"></div>
+        <div class="w-1 h-4 bg-white/30 animate-pulse delay-75"></div>
+        <div class="w-1 h-4 bg-white/20 animate-pulse delay-150"></div>
+        <div class="w-1 h-4 bg-white/10 animate-pulse delay-300"></div>
       </div>
+      <div class="text-[9px] text-white font-mono uppercase tracking-widest">17/01/2026</div>
+    </div>
+
+    <div class="absolute inset-x-4 md:inset-x-0 md:right-6 lg:right-12 md:left-auto top-1/2 -translate-y-1/2 z-20 text-center md:text-right flex flex-col items-center md:items-end justify-center px-4 md:px-0">
+      <div class="mb-3 md:mb-4 overflow-hidden">
+        <span class="text-[10px] md:text-xs text-white/80 font-bold tracking-[0.3em] md:tracking-[0.5em] uppercase block mb-2 opacity-70">NOUVELLE ALBUM</span>
+        <div class="h-[2px] w-16 md:w-24 bg-white/40 mx-auto md:mx-0 md:ml-auto"></div>
+      </div>
+
+      <h2 class="text-white/90 text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-poppins uppercase bold font-black mb-1 md:mb-2 tracking-tighter leading-none">
+        ZIAK
+      </h2>
       
-      <h2 class="text-white/90 text-6xl md:text-9xl font-poppins uppercase bold font-black mb-2 tracking-tighter leading-none">
+      <h2 class="text-white/90 text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-poppins uppercase bold font-black mb-1 md:mb-2 tracking-tighter leading-none">
         LA FORGE
       </h2>
       
-      <p class="text-white/40 text-xl font-poppins font-light tracking-[0.4em] mt-4 italic">17/01/2026</p>
-      <div class="mt-12 flex flex-col items-end gap-4 group cursor-pointer">
-        <div class="relative px-8 py-3 border border-white/20 overflow-hidden transition-all group-hover:border-white group-hover:bg-white/5">
-          <a href="#cover-section-container" class="text-white text-sm font-bold uppercase tracking-[0.4em] relative z-10">Entrez dans la forge</a>
+      <p class="text-white/40 text-sm md:text-xl font-poppins font-light tracking-[0.2em] md:tracking-[0.4em] mt-2 md:mt-4 italic">17/01/2026</p>
+      
+      <div class="mt-6 md:mt-12 flex flex-col items-center md:items-end gap-4 group cursor-pointer">
+        <div class="relative px-4 md:px-8 py-2 md:py-3 border border-white/20 overflow-hidden transition-all group-hover:border-white group-hover:bg-white/5">
+          <a href="#cover-section-container" class="text-white text-xs md:text-sm font-bold uppercase tracking-[0.2em] md:tracking-[0.4em] relative z-10">Entrez dans la forge</a>
           <div class="absolute top-0 left-0 w-1 h-1 bg-white"></div>
           <div class="absolute bottom-0 right-0 w-1 h-1 bg-white"></div>
         </div>
       </div>
     </div>
-    <img src="/dither_cut1.png" alt="Masque" class="w-90 h-70 cursor-pointer absolute bottom-10 right-10  animate-float">
+
+    <img src="/dither_cut1.png" alt="Masque" class="hidden lg:block w-60 xl:w-90 h-auto cursor-pointer absolute bottom-10 right-10 animate-float opacity-60">
   `;
 
   const container = section.querySelector("#three-container") as HTMLElement;
@@ -122,6 +127,23 @@ export function createHeroSection(): HTMLElement {
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   });
 
+  const updateModelPosition = () => {
+    if (!model) return;
+    const isMobile = window.innerWidth < 768;
+    const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+
+    if (isMobile) {
+      model.position.x = 0;
+      model.scale.setScalar(model.userData.baseScale * 0.8);
+    } else if (isTablet) {
+      model.position.x = -2;
+      model.scale.setScalar(model.userData.baseScale * 0.9);
+    } else {
+      model.position.x = -4;
+      model.scale.setScalar(model.userData.baseScale);
+    }
+  };
+
   loader.load(
     "/zzz.glb",
     (gltf) => {
@@ -135,8 +157,10 @@ export function createHeroSection(): HTMLElement {
       const maxDim = Math.max(size.x, size.y, size.z);
       const scale = 5.0 / maxDim;
       model.scale.set(scale, scale, scale);
+      model.userData.baseScale = scale;
 
       model.position.x = -4;
+      updateModelPosition();
 
       scene.add(model);
 
@@ -198,10 +222,14 @@ export function createHeroSection(): HTMLElement {
 
   animate();
 
-  window.addEventListener("resize", updateSize);
+  window.addEventListener("resize", () => {
+    updateSize();
+    updateModelPosition();
+  });
 
   const resizeObserver = new ResizeObserver(() => {
     updateSize();
+    updateModelPosition();
   });
   resizeObserver.observe(container);
 

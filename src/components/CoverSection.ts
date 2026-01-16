@@ -150,29 +150,14 @@ export function createCoverSection(): HTMLElement {
               </div>
             </div>
           </div>
-
-          <div class="mt-6 space-y-4">
-            <button id="randomize" class="w-full px-8 py-4 bg-white text-black font-bold uppercase text-sm tracking-[0.3em] hover:bg-white/90 transition-all hover:scale-[1.02] active:scale-95">
-              Générer Aléatoirement
-            </button>
-            
-            <div class="flex gap-3">
-              <button id="download-cover" class="flex-1 px-6 py-3 border border-white/40 text-white font-bold uppercase text-[10px] tracking-[0.3em] hover:bg-white/10 transition-all">
-                Télécharger
-              </button>
-              <button id="toggle-grid" class="px-6 py-3 border border-white/20 text-white/70 font-bold uppercase text-[10px] tracking-[0.3em] hover:border-white hover:text-white transition-all">
-                Grille
-              </button>
-            </div>
-          </div>
         </div>
 
         <div id="presets-container" class="lg:col-span-2 space-y-4">
           
           <div class="border border-white/10 bg-white/2 p-6">
-            <label class="text-white/80 text-xs uppercase tracking-wider font-bold mb-3 block">Presets </label>
-            <p class="text-white/40 text-[11px] tracking-wider font-bold mb-3">Un preset permet de générer une cover avec des options predefinies.</p>
-            <div class="grid grid-cols-2 gap-2">
+            <label class="text-white/80 text-xs uppercase tracking-wider font-bold mb-3 block">Presets</label>
+            <p class="text-white/40 text-[11px] tracking-wider mb-4">Un preset permet de générer une cover avec des options prédéfinies.</p>
+            <div class="grid grid-cols-2 gap-2 mb-4">
               <button data-preset="akimbo" class="preset-btn px-4 py-3 border border-white/20 text-white/60 text-[10px] uppercase tracking-wider font-bold hover:border-white/40 hover:text-white transition-all">
                 Akimbo
               </button>
@@ -186,11 +171,22 @@ export function createCoverSection(): HTMLElement {
                 Vague
               </button>
             </div>
+            <button id="randomize" class="w-full px-6 py-3 bg-white text-black font-bold uppercase text-[10px] tracking-[0.3em] hover:bg-white/90 transition-all">
+              Aléatoire
+            </button>
           </div>
 
+          <div class="flex gap-2">
+            <button id="download-cover" class="flex-1 px-4 py-3 bg-white text-black font-bold uppercase text-[10px] tracking-[0.2em] hover:bg-white/90 transition-all">
+              Télécharger
+            </button>
+            <button id="toggle-grid" class="px-4 py-3 border border-white/20 text-white/60 font-bold uppercase text-[10px] tracking-[0.2em] hover:border-white/40 hover:text-white transition-all">
+              Grille
+            </button>
+          </div>
 
-          <button id="show-advanced-content" class="w-full px-8 py-4 bg-white text-black font-bold uppercase text-sm tracking-[0.3em] hover:bg-white/90 transition-all hover:scale-[1.02] active:scale-95">
-            Afficher les options avancées ⏷
+          <button id="show-advanced-content" class="w-full px-6 py-3 border border-white/20 text-white/60 font-bold uppercase text-[10px] tracking-[0.3em] hover:border-white/40 hover:text-white transition-all">
+            Options avancées ⏷
           </button>
 
           <div id="presets-container-advanced" class="border border-white/10 bg-white/2" style="display: none;">
@@ -208,10 +204,10 @@ export function createCoverSection(): HTMLElement {
                 <label class="text-white/80 text-[10px] uppercase tracking-wider font-bold mb-2 block">Modèle</label>
                 <div class="grid grid-cols-2 gap-2">
                   <button id="mask-ziak" class="px-4 py-3 border border-white/40 bg-white/10 text-white/90 text-[10px] uppercase tracking-wider font-bold hover:bg-white/20 transition-all">
-                    Ziak
+                    Masque1
                   </button>
                   <button id="mask-zzz" class="px-4 py-3 border border-white/20 text-white/40 text-[10px] uppercase tracking-wider font-bold hover:border-white/40 hover:text-white/60 transition-all">
-                    ZZZ
+                    Masque2
                   </button>
                 </div>
               </div>
@@ -359,11 +355,7 @@ export function createCoverSection(): HTMLElement {
   bgMesh.position.z = -5;
   scene.add(bgMesh);
 
-  function generateBackground(
-    type: string,
-    color1: string,
-    color2: string,
-  ) {
+  function generateBackground(type: string, color1: string, color2: string) {
     bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
     const w = bgCanvas.width;
     const h = bgCanvas.height;
@@ -881,11 +873,7 @@ export function createCoverSection(): HTMLElement {
     roughnessControl.value = preset.roughness.toString();
 
     bgTypeSelect.dispatchEvent(new Event("change"));
-    generateBackground(
-      preset.bgType,
-      preset.bgColor1,
-      preset.bgColor2
-    );
+    generateBackground(preset.bgType, preset.bgColor1, preset.bgColor2);
     updateMainText("LA FORGE", preset.textOpacity, preset.textColor);
     updateSecondaryText("ZIAK", preset.textOpacity, preset.textColor);
 
@@ -967,8 +955,8 @@ export function createCoverSection(): HTMLElement {
     roughnessControl.value = randomRough.toFixed(2);
 
     bgTypeSelect.dispatchEvent(new Event("change"));
-    generateBackground(randomType, palette.bg1, palette.bg2);  
-      updateMainText("LA FORGE", 1, palette.text);
+    generateBackground(randomType, palette.bg1, palette.bg2);
+    updateMainText("LA FORGE", 1, palette.text);
     updateSecondaryText("ZIAK", 1, palette.text);
 
     rotationValue.textContent = `${randomRotation}°`;
@@ -1051,8 +1039,8 @@ export function createCoverSection(): HTMLElement {
   showAdvancedContentBtn.addEventListener("click", () => {
     advancedContentVisible = !advancedContentVisible;
     showAdvancedContentBtn.textContent = advancedContentVisible
-      ? "Masquer les options avancées ⏶"
-      : "Afficher les options avancées ⏷";
+      ? "Options avancées ⏶"
+      : "Options avancées ⏷";
     presetsContainerAdvanced.style.display = advancedContentVisible
       ? "block"
       : "none";
